@@ -10,31 +10,43 @@
 <div id="top"></div>
 <div id="nav"></div>
 <div class="wrap">
-  <h1 class="page-title" data-i18n="d4_title">Financials Highlights</h1>
-  <div class="page-sub" data-i18n="d4_sub">Estate-level financial indicators, cost estimates, pricing benchmarks and funding.</div>
+  <div class="page-head">
+    <h1 class="page-title" data-i18n="d4_title">Financials Highlights</h1>
+    <div class="page-sub" data-i18n="d4_sub">Estate-level financial indicators, cost estimates, pricing benchmarks and funding.</div>
+    <div class="meta-bar">
+      <span class="m-item"><strong data-i18n="data_as_of">Data as of</strong> 2026-09-26</span>
+      <span class="m-item" data-i18n="source_note">Source: Megatama project files · latest version per type, older duplicates ignored</span>
+    </div>
+  </div>
 
   <div class="grid grid-4" id="kpis"></div>
 
   <div class="grid grid-2">
     <div class="card">
       <h3 data-i18n="fm_title">Financial Model — Deal Basis (2026)</h3>
+      <div class="table-scroll">
       <table>
         <tbody id="fmTable"></tbody>
       </table>
+      </div>
     </div>
     <div class="card">
       <h3 data-i18n="price_title">Pricing Benchmarks</h3>
+      <div class="table-scroll">
       <table>
         <tbody id="priceTable"></tbody>
       </table>
+      </div>
     </div>
   </div>
 
   <div class="card">
     <h3 data-i18n="funding_title">Interchange Funding (Apr–May 2026)</h3>
+    <div class="table-scroll">
     <table>
       <tbody id="fundTable"></tbody>
     </table>
+    </div>
     <div class="chart-box" id="chartFunding"></div>
   </div>
 
@@ -80,15 +92,18 @@ window.renderAll = function () {
   fm += row(th(t('fm_price')) + th('<span class="num">' + fmt(F.fm.price.v) + '</span> ' + F.fm.price.u));
   fm += row(th(t('fm_devcost')) + th('<span class="num">' + fmt(F.fm.devCostMin.v) + ' – ' + fmt(F.fm.devCostMax.v) + '</span> ' + F.fm.devCostMax.u));
   fm += row(th(t('fm_land')) + th('<span class="num">' + fmt(F.fm.landMin.v) + ' – ' + fmt(F.fm.landMax.v) + '</span> ' + F.fm.landMax.u));
+  fm += row(th(t('fm_irr_p')) + th('<span class="num">' + fmt(F.fm.irrP.v) + '</span> ' + F.fm.irrP.u));
+  fm += row(th(t('fm_irr_e')) + th('<span class="num">' + fmt(F.fm.irrE.v) + '</span> ' + F.fm.irrE.u));
+  fm += row(th(t('fm_gm')) + th('<span class="num">' + fmt(F.fm.gm.v) + '</span> ' + F.fm.gm.u));
   fm += row(th(t('fm_irr')) + th(F.fm.irrTarget));
   fm += row(th(t('fm_period')) + th(F.fm.period));
   document.getElementById('fmTable').innerHTML = fm;
 
   var pr = '';
-  pr += row(th(t('internal_sim')) + th('<span class="num">' + F.pricing.internalSim.v + '</span> ' + F.pricing.internalSim.u + ' <span class="note" style="display:inline">(' + t(F.pricing.internalSim.noteKey) + ')</span>'));
-  pr += row(th(t('market_avg')) + th('<span class="num">' + fmt(F.pricing.marketAvg.v) + '</span> ' + F.pricing.marketAvg.u + ' <span class="note" style="display:inline">(' + t(F.pricing.marketAvg.noteKey) + ')</span>'));
-  pr += row(th(t('pn_forecast')) + th(t('pn_forecast')));
-  pr += row(th(t('fx')) + th(F.pricing.fx));
+  pr += row(th(t('internal_sim')) + th('<span class="num">' + F.pricing.internalSim.v + '</span> ' + F.pricing.internalSim.u + ' <span class="inline-note">(' + t(F.pricing.internalSim.noteKey) + ')</span>'));
+  pr += row(th(t('market_avg')) + th('<span class="num">' + fmt(F.pricing.marketAvg.v) + '</span> ' + F.pricing.marketAvg.u + ' <span class="inline-note">(' + t(F.pricing.marketAvg.noteKey) + ')</span>'));
+  pr += row(th(t('pn_forecast')) + th('<span class="num">' + fmt(F.pricing.forecast.v) + '</span> ' + F.pricing.forecast.u + ' <span class="inline-note">(' + t(F.pricing.forecast.noteKey) + ')</span>'));
+  pr += row(th(t('fx')) + th(F.pricing.fx + ' IDR / USD'));
   document.getElementById('priceTable').innerHTML = pr;
 
   var fu = '';

@@ -10,37 +10,50 @@
 <div id="top"></div>
 <div id="nav"></div>
 <div class="wrap">
-  <h1 class="page-title" data-i18n="d1_title">General Information & Master Plan</h1>
-  <div class="page-sub" data-i18n="d1_sub">Estate profile, master plan versions and infrastructure specification.</div>
+  <div class="page-head">
+    <h1 class="page-title" data-i18n="d1_title">General Information & Master Plan</h1>
+    <div class="page-sub" data-i18n="d1_sub">Estate profile, master plan versions and infrastructure specification.</div>
+    <div class="meta-bar">
+      <span class="m-item"><strong data-i18n="data_as_of">Data as of</strong> 2026-09-26</span>
+      <span class="m-item" data-i18n="source_note">Source: Megatama project files · latest version per type, older duplicates ignored</span>
+    </div>
+  </div>
 
   <div class="grid grid-2">
     <div class="card">
       <h3 data-i18n="estate_profile">Estate Profile</h3>
+      <div class="table-scroll">
       <table>
         <tbody id="profileTable"></tbody>
       </table>
+      </div>
     </div>
     <div class="card">
       <h3 data-i18n="area_summary">Area Summary</h3>
+      <div class="table-scroll">
       <table>
         <tbody id="areaTable"></tbody>
       </table>
+      </div>
       <div class="chart-box" id="chartLanduse"></div>
     </div>
   </div>
 
   <div class="card">
     <h3 data-i18n="masterplan_versions">Master Plan Versions</h3>
+    <div class="table-scroll">
     <table>
       <thead><tr>
         <th data-i18n="version">Version</th>
         <th data-i18n="designer">Designer</th>
-        <th data-i18n="area_ha">Area (ha)</th>
+        <th class="num" data-i18n="area_ha">Area (ha)</th>
         <th data-i18n="mp_status">Status</th>
       </tr></thead>
       <tbody id="mpTable"></tbody>
     </table>
-    <div class="note" data-i18n="land_use_title">Master Plan Land Use (522.34 ha)</div>
+    </div>
+    <div class="note" data-i18n="land_use_title">Master Plan Land Use — gross 5,099,024 m² (per FS)</div>
+    <div class="table-scroll">
     <table>
       <thead><tr>
         <th data-i18n="value">Value</th>
@@ -48,10 +61,12 @@
       </tr></thead>
       <tbody id="landUseTable"></tbody>
     </table>
+    </div>
   </div>
 
   <div class="card">
     <h3 data-i18n="infra_title">Infrastructure Specification</h3>
+    <div class="table-scroll">
     <table>
       <thead><tr>
         <th data-i18n="utility">Utility</th>
@@ -63,6 +78,7 @@
       </tr></thead>
       <tbody id="infraTable"></tbody>
     </table>
+    </div>
     <div class="grid grid-2">
       <div class="chart-box" id="chartElec"></div>
       <div class="chart-box" id="chartWater"></div>
@@ -86,33 +102,36 @@ window.renderAll = function () {
 
   var profile = '';
   profile += row(th(t('company')) + th(e.company));
-  profile += row(th(t('group')) + th(e.group + ' · <span class="note" style="display:inline">' + t('gd_text') + '</span>'));
+  profile += row(th(t('group')) + th(e.group + ' · <span class="inline-note">' + t('gd_text') + '</span>'));
   profile += row(th(t('founded')) + th(e.founded));
   profile += row(th(t('deed')) + th(e.deed));
   profile += row(th(t('holding')) + th(e.holding));
-  profile += row(th(t('location')) + th(e.location));
+  profile += row(th(t('location')) + th(L(e.location)));
   profile += row(th(t('interchange')) + th(e.interchange));
   document.getElementById('profileTable').innerHTML = profile;
 
   var area = '';
-  area += row(th(t('licensed_area')) + th('<b>' + fmt(e.licensedTotal.v) + '</b> ' + t('ha')));
+  area += row(th(t('licensed_area')) + th('<span class="val">' + fmt(e.licensedTotal.v) + '</span> ' + t('ha')));
   area += row(th(t('industrial_area')) + th(fmt(e.industrial.v) + ' ' + t('ha')));
   area += row(th(t('whs_res_com')) + th(fmt(e.whsResCom.v) + ' ' + t('ha')));
-  area += row(th(t('masterplan_area')) + th('<b>' + fmt(e.masterplanArea.v) + '</b> ' + t('ha') + ' (DED ' + t('mp_status') + ')'));
+  area += row(th(t('masterplan_area')) + th('<span class="val">' + fmt(e.masterplanArea.v) + '</span> ' + t('ha') + ' (' + t('mp_current') + ')'));
+  area += row(th(t('agri_estate')) + th(fmt(e.agriEstate.v) + ' ' + t('ha') + ' · ' + e.agriEstate.note));
   document.getElementById('areaTable').innerHTML = area;
 
   var mp = '';
   for (var i = 0; i < e.masterplans.length; i++) {
     var m = e.masterplans[i];
-    mp += row(th(m.version) + th(m.designer) + th('<span class="num">' + fmt(m.area) + '</span>') + th(m.status === 'current' ? '<span class="tag tag-ok">' + t('status_obtained') + '</span>' : m.status));
+    var tag = m.status === 'current'
+      ? '<span class="tag tag-ok">' + t('mp_current') + '</span>'
+      : '<span class="tag tag-mute">' + t('mp_rev') + '</span>';
+    mp += row(th(m.version) + th(m.designer) + th('<span class="num">' + fmt(m.area) + '</span>') + th(tag));
   }
   document.getElementById('mpTable').innerHTML = mp;
 
   var lu = '';
   for (var j = 0; j < e.landUse.length; j++) {
     var l = e.landUse[j];
-    var label = (j === 0) ? (t('lu_industrial') + ' — ' + t('lu_landbank')) : t(l.key);
-    lu += row(th(label) + th('<span class="num">' + fmt(l.share) + ' ' + t('pct') + '</span>'));
+    lu += row(th(t(l.key)) + th('<span class="num">' + fmt(l.share) + ' ' + t('pct') + '</span>'));
   }
   document.getElementById('landUseTable').innerHTML = lu;
 

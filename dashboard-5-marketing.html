@@ -10,8 +10,14 @@
 <div id="top"></div>
 <div id="nav"></div>
 <div class="wrap">
-  <h1 class="page-title" data-i18n="d5_title">Marketing & Collaboration</h1>
-  <div class="page-sub" data-i18n="d5_sub">All third-party related updates and progress — clients, agreements, marketing, market intelligence and meetings.</div>
+  <div class="page-head">
+    <h1 class="page-title" data-i18n="d5_title">Marketing & Collaboration</h1>
+    <div class="page-sub" data-i18n="d5_sub">All third-party related updates and progress — clients, agreements, marketing, market intelligence and meetings.</div>
+    <div class="meta-bar">
+      <span class="m-item"><strong data-i18n="data_as_of">Data as of</strong> 2026-09-26</span>
+      <span class="m-item" data-i18n="source_note">Source: Megatama project files · latest version per type, older duplicates ignored</span>
+    </div>
+  </div>
 
   <div class="card">
     <h3 data-i18n="pipeline_title">Client Engagement Pipeline (7 stages)</h3>
@@ -25,6 +31,7 @@
   <div class="grid grid-2">
     <div class="card">
       <h3 data-i18n="req_title">Client Requirements & Deal Parameters</h3>
+      <div class="table-scroll">
       <table>
         <thead><tr>
           <th data-i18n="r_client">Client</th>
@@ -33,9 +40,11 @@
         </tr></thead>
         <tbody id="reqTable"></tbody>
       </table>
+      </div>
     </div>
     <div class="card">
       <h3 data-i18n="agmt_title">Third-Party Agreements Register</h3>
+      <div class="table-scroll">
       <table>
         <thead><tr>
           <th data-i18n="ag_name">Agreement</th>
@@ -45,12 +54,14 @@
         </tr></thead>
         <tbody id="agmtTable"></tbody>
       </table>
+      </div>
     </div>
   </div>
 
   <div class="grid grid-2">
     <div class="card">
       <h3 data-i18n="collateral_title">Marketing Collateral (latest version)</h3>
+      <div class="table-scroll">
       <table>
         <thead><tr>
           <th data-i18n="mc_name">Material</th>
@@ -60,9 +71,11 @@
         </tr></thead>
         <tbody id="colTable"></tbody>
       </table>
+      </div>
     </div>
     <div class="card">
       <h3 data-i18n="intel_title">Market Intelligence</h3>
+      <div class="table-scroll">
       <table>
         <thead><tr>
           <th data-i18n="mi_name">Report / data</th>
@@ -71,11 +84,13 @@
         </tr></thead>
         <tbody id="intelTable"></tbody>
       </table>
+      </div>
     </div>
   </div>
 
   <div class="card">
     <h3 data-i18n="meet_title">Third-Party Meetings & Action Items</h3>
+    <div class="table-scroll">
     <table>
       <thead><tr>
         <th data-i18n="m_date">Date</th>
@@ -83,6 +98,7 @@
       </tr></thead>
       <tbody id="meetTable"></tbody>
     </table>
+    </div>
   </div>
 </div>
 <div id="bottom"></div>
@@ -120,9 +136,9 @@ window.renderAll = function () {
     for (var j = 0; j < h.length; j++) {
       hist += '<li>' + h[j] + '</li>';
     }
-    cc += '<div class="card" style="margin:0 0 10px">' +
-      '<h3 style="justify-content:space-between"><span>' + c.name + '</span><span class="tag tag-warn">' + t('stage') + ' ' + fmt(c.stage) + ' / 7</span></h3>' +
-      '<ul style="margin:0 0 8px;padding-left:18px;font-size:12.5px">' + hist + '</ul>' +
+    cc += '<div class="client-card">' +
+      '<div class="cc-head"><b>' + c.name + '</b><span class="tag tag-warn">' + t('stage') + ' ' + fmt(c.stage) + ' / 7</span></div>' +
+      '<ul>' + hist + '</ul>' +
       '<div class="note"><b>' + t('status_pending') + ':</b> ' + L(c.pending) + '</div>' +
     '</div>';
   }

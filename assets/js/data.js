@@ -18,7 +18,7 @@ function L(obj) { return obj ? (obj[CURRENT_LANG] !== undefined ? obj[CURRENT_LA
 
 var D = {
   meta: {
-    asOf: '2026-05-26',
+    asOf: '2026-09-26',
     source: 'Megatama project files (latest version per type)'
   },
 
@@ -28,12 +28,13 @@ var D = {
     founded: '2012-10-23',
     deed: 'Akta No. 48',
     holding: 'PT Prima Jaya Permai (incl. Citraduta Sukses Semesta, Teguh Anindyaguna, Bintang Anugrah Permai)',
-    location: 'Bungursari & Campaka, Purwakarta, Jawa Barat, Indonesia',
-    interchange: 'Simpang Susun Campaka, KM 77+800 (Purwakarta–Bandung Toll)',
+    location: { en: 'Purwakarta (Desa Karangmukti / Desa Cibodas, Kec. Bungursari), West Java, Indonesia — Karawang corridor', zh: '西爪哇省普尔瓦卡塔（Karangmukti / Cibodas 村，Bungursari 区）— 加拉旺走廊', id: 'Purwakarta (Desa Karangmukti / Desa Cibodas, Kec. Bungursari), Jawa Barat, Indonesia — koridor Karawang' },
+    interchange: 'Simpang Susun Campaka, KM 77+800 — Cipali (Cikopo–Palimanan) Toll Road',
     licensedTotal: { v: 652, u: 'ha' },
     industrial: { v: 461, u: 'ha' },
     whsResCom: { v: 191, u: 'ha' },
     masterplanArea: { v: 522.3, u: 'ha' },
+    agriEstate: { v: 100, u: 'ha', note: 'tenant purchased 12.8 ha+ since 2021' },
     landUse: [
       { key: 'lu_landbank', share: 55.5, pct: true },
       { key: 'lu_sellable', share: 19.6, pct: true },
@@ -49,6 +50,7 @@ var D = {
     infra: [
       { key: 'ut_elec', supplier: 'PLN', current: 60, target: 360, unit: 'MW', noteKey: 'n_elec' },
       { key: 'ut_water', supplier: 'PDAM (JV Tirta Tama Sejahtera)', current: 3000, target: 16500, unit: 'm³/day', noteKey: 'n_water' },
+      { key: 'ut_ww', supplier: 'Third party (WWTP)', current: 5500, target: 13500, unit: 'm³/day', noteKey: 'n_ww' },
       { key: 'ut_gas', supplier: 'PGN', current: null, target: null, unit: 'bar', noteKey: 'n_gas' },
       { key: 'ut_road', supplier: '—', current: null, target: null, unit: 'm', noteKey: 'n_road' },
       { key: 'ut_substation', supplier: 'PLN', current: null, target: null, unit: 'km', noteKey: 'n_sub' },
@@ -65,7 +67,11 @@ var D = {
       npv: { v: 47063168000, u: 'IDR' },
       npvRate: { v: 10.8, u: '%' },
       irr: { v: 15.5, u: '%' },
-      payback: { v: 6.2, u: 'years' }
+      payback: { v: 6.2, u: 'years' },
+      debt: { v: 305000000000, u: 'IDR' },
+      debtPct: { v: 70, u: '%' },
+      tenor: { v: 6.0, u: 'years' },
+      grace: { v: 1.5, u: 'years' }
     },
     costUltimate: {
       total: { v: 2053254161380, u: 'IDR' },
@@ -92,11 +98,11 @@ var D = {
       totalRaw: { v: 75.4, u: 'ha' }
     },
     docs: [
-      { name: 'Feasibility Study Report', date: '2025-08-28', desc: 'Provalindo · 59 pages' },
-      { name: 'Detail Engineering Design (DED)', date: '—', desc: 'Indokoei · 332 pages' },
+      { name: 'Feasibility Study Report', date: '2025-08-28', desc: 'Provalindo · 59 pages · Desa Karangmukti, Purwakarta' },
+      { name: 'Final DED Report (071025)', date: '2025-10-07', desc: 'Indokoei · 332 pages · Ultimate / R6 / Rev 1d basis' },
       { name: 'Survey Report', date: '—', desc: 'Indokoei' },
       { name: 'Development Costs Summary (Ultimate)', date: '—', desc: '3 options · 12 work categories' },
-      { name: 'Cost Estimate 260326', date: '2026-03-26', desc: 'multi-option cost estimate' },
+      { name: 'Cost Estimate 260326', date: '2026-03-26', desc: 'multi-option cost estimate (incl. Haier 20 ha set) · FX 16,500' },
       { name: 'M-IR-01 / M-IR-02', date: '—', desc: 'road / railway technical' },
       { name: 'Railways Clarification', date: '—', desc: 'crossing estate' },
       { name: 'Land Plot Maps', date: '—', desc: 'parcel layout' },
@@ -105,9 +111,9 @@ var D = {
       { name: 'HGB Siap Pakai 12092025', date: '2025-09-12', desc: '7 parcels · 75.4 ha ready' }
     ],
     parcels: [
-      { name: '55 ha', delivery: '4–6 months' },
-      { name: '76 ha', delivery: '6–8 months' },
-      { name: '82 ha', delivery: '6–8 months' }
+      { name: '55 ha (1,712 m × 328 m)', delivery: 'land leveling ~4 months after downpayment' },
+      { name: '76 ha', delivery: '6–8 months (seller estimate)' },
+      { name: '82 ha', delivery: '6–8 months (seller estimate)' }
     ]
   },
 
@@ -115,7 +121,7 @@ var D = {
     statusCounts: { obtained: 8, ongoing: 8, pending: 3 },
     permits: [
       { name: { en: 'Company establishment', zh: '公司设立', id: 'Pendirian perusahaan' }, number: 'Akta No. 48', issuer: 'Notary Merry Eddy', date: '2012-10-23', status: 'obtained' },
-      { name: { en: 'SKKLH — environmental feasibility', zh: 'SKKLH — 环境可行性批准', id: 'SKKLH — kelayakan lingkungan' }, number: '660.1/Kep.367-DLHII/2025', issuer: 'Bupati Purwakarta', date: '2025 · app. 004/MPS-DIR/IX/2025', status: 'obtained' },
+      { name: { en: 'SKKLH — environmental feasibility', zh: 'SKKLH — 环境可行性批准', id: 'SKKLH — kelayakan lingkungan' }, number: 'Kep.660.1/Kep.367-DLHII/2025', issuer: 'Bupati Purwakarta', date: '2025 · app. 004/MPS-DIR/IX/2025', status: 'obtained' },
       { name: { en: 'PBG — drainage', zh: 'PBG — 排水工程', id: 'PBG — drainase' }, number: 'SK-PBG-321413-18122025-007', issuer: 'Pemkab Purwakarta', date: '2025-12-18', status: 'obtained' },
       { name: { en: 'PBG — road', zh: 'PBG — 道路工程', id: 'PBG — jalan' }, number: 'SK-PBG-321413-02012026-002', issuer: 'Pemkab Purwakarta', date: '2026-01-02', status: 'obtained' },
       { name: { en: 'PBG — marketing building', zh: 'PBG — 营销办公楼', id: 'PBG — gedung pemasaran' }, number: 'SK-PBG-321413-02012026-001', issuer: 'Pemkab Purwakarta', date: '2026-01-02 · 1,000 m² · 2 floors', status: 'obtained' },
@@ -170,18 +176,22 @@ var D = {
     },
     fm: {
       price: { v: 1650000, u: 'IDR/m²' },
-      devCostMin: { v: 460000, u: 'IDR/m²' },
-      devCostMax: { v: 490000, u: 'IDR/m²' },
+      devCostMin: { v: 460210.7, u: 'IDR/m²' },
+      devCostMax: { v: 490570.1, u: 'IDR/m²' },
       landMin: { v: 475000, u: 'IDR/m²' },
       landMax: { v: 550000, u: 'IDR/m²' },
+      irrP: { v: 18.6, u: '%' },
+      irrE: { v: 19.2, u: '%' },
+      gm: { v: 30.1, u: '%' },
       irrTarget: '18–20%',
       period: '2026-04 → 2041-03'
     },
     pricing: {
-      internalSim: { v: '1,530,000 – 1,810,000', u: 'IDR/m²', noteKey: 'pn_sim_note' },
+      internalSim: { v: '1,526,250 – 1,812,422', u: 'IDR/m²', noteKey: 'pn_sim_note' },
       marketAvg: { v: 125, u: 'USD/m²', noteKey: 'pn_avg_note' },
       forecastKey: 'pn_forecast',
-      fx: '16,300 – 16,500'
+      forecast: { v: 141, u: 'USD/m²', noteKey: 'pn_forecast_note' },
+      fx: '16,500'
     },
     funding: {
       need: { v: 10616000000, u: 'IDR' },
@@ -225,27 +235,31 @@ var D = {
         pending: { en: 'Formal transaction negotiation', zh: '正式交易谈判', id: 'Negosiasi transaksi resmi' }
       },
       {
-        name: 'Semcorp',
+        name: 'Sembcorp',
         stage: 3,
         stageText: 'semcorp_stage',
         history: {
-          en: ['Indicative FM 2025-02', 'Deal FM 2025-08', 'Final report 2025-09 (Colliers Purwakarta market research)'],
-          zh: ['意向财务模型 2025-02', '交易财务模型 2025-08', '最终报告 2025-09（Colliers Purwakarta 市场研究）'],
-          id: ['FM indikatif 2025-02', 'FM deal 2025-08', 'Laporan akhir 2025-09 (riset pasar Colliers Purwakarta)']
+          en: ['Indicative FM 2025-02', 'Deal FM 2025-08', 'Final report 2025-09 (Colliers Purwakarta market research)', '2026-09-16: new park marketing materials (Sembcorp Purwakarta) — market intelligence, no transaction progress'],
+          zh: ['意向财务模型 2025-02', '交易财务模型 2025-08', '最终报告 2025-09（Colliers Purwakarta 市场研究）', '2026-09-16：新增其园区营销资料（Sembcorp Purwakarta 园区）——属市场情报，无交易进展'],
+          id: ['FM indikatif 2025-02', 'FM deal 2025-08', 'Laporan akhir 2025-09 (riset pasar Colliers Purwakarta)', '2026-09-16: materi pemasaran taman baru (Sembcorp Purwakarta) — intelijen pasar, tanpa progres transaksi']
         },
-        pending: { en: 'No files after 2025-09 — suspected dormant', zh: '2025-09 后无新文件——疑似搁置', id: 'Tanpa berkas setelah 2025-09 — diduga terhenti' }
+        pending: { en: 'Deal status unconfirmed — 2026-09 files are marketing materials of Sembcorp’s own Purwakarta park (competitor intel)', zh: '交易状态未确认——2026-09 文件为其自家 Purwakarta 园区营销资料（竞品情报）', id: 'Status deal belum dikonfirmasi — berkas 2026-09 adalah materi pemasaran taman Purwakarta milik Sembcorp (intel pesaing)' }
       }
     ],
     requirements: [
       { client: 'CATL', itemKey: 'r_construction', value: '2027-04' },
       { client: 'CATL', itemKey: 'r_production', value: '2028-02' },
       { client: 'CATL', itemKey: 'r_land', value: '125–150 acres (≈ 51–61 ha)' },
-      { client: 'CATL', itemKey: 'r_power', value: '5 MW → 90 MW' },
+      { client: 'CATL', itemKey: 'r_power', value: '5 MW → 90 MW (≥120 MW raised at 2026-05-26 meeting)' },
       { client: 'CATL', itemKey: 'r_water', value: '8,250 m³/day' },
       { client: 'CATL', itemKey: 'r_gas', value: '180,000 Nm³/day' },
+      { client: 'CATL', itemKey: 'r_ww_dom', value: '300 → 450 T/day' },
+      { client: 'CATL', itemKey: 'r_ww_ind', value: '300 → 375 T/day' },
+      { client: 'CATL', itemKey: 'r_rain', value: '30,000 → 102,000 m³/h' },
       { client: 'Liando', itemKey: 'r_land_area', value: '80–100 ha' },
+      { client: 'Liando', itemKey: 'r_price', value: 'IDR 500,000 – 560,000 / m²' },
       { client: 'Liando', itemKey: 'r_payment', value: '30 / 10 / 25 / 20 / 15 (%)' },
-      { client: 'Liando', itemKey: 'r_exclusivity', value: '90 days' }
+      { client: 'Liando', itemKey: 'r_exclusivity', value: '90 days after ODI application submission (per MOU)' }
     ],
     agreements: [
       { name: 'NDA', party: 'Liando', date: '2025-02', status: 'executed' },
@@ -269,7 +283,9 @@ var D = {
       { name: 'Purwakarta Industrial Market Research', source: 'Colliers', date: '2025-09' },
       { name: 'Summary Market Research — Jakarta–Patimban corridor', source: 'project file', date: '—' },
       { name: 'Competitor land prices (Kompetitor jalan)', source: 'project file', date: '—' },
-      { name: 'Regional price forecast 2024–2028', source: 'project file', date: '—' }
+      { name: 'Regional price forecast 2024–2028', source: 'project file', date: '—' },
+      { name: 'Sembcorp Purwakarta park — marketing deck (industrial 355.6 ha + residential/commercial 168 ha; Phase 1 100.65 ha)', source: 'Sembcorp materials (2026-09-16)', date: '2026-09-16' },
+      { name: 'Purwakarta regional facts — 2026 minimum wage IDR 5,052,856; talent pool 1.05M', source: 'Sembcorp materials (2026-09-16)', date: '2026-09-16' }
     ],
     meetings: [
       { date: '2025-09', topicKey: 'm_liando_qa' },

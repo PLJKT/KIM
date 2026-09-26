@@ -10,8 +10,14 @@
 <div id="top"></div>
 <div id="nav"></div>
 <div class="wrap">
-  <h1 class="page-title" data-i18n="d3_title">Legal Status & Applied Regulation</h1>
-  <div class="page-sub" data-i18n="d3_sub">Government permits, compliance obligations and applicable regulations.</div>
+  <div class="page-head">
+    <h1 class="page-title" data-i18n="d3_title">Legal Status & Applied Regulation</h1>
+    <div class="page-sub" data-i18n="d3_sub">Government permits, compliance obligations and applicable regulations.</div>
+    <div class="meta-bar">
+      <span class="m-item"><strong data-i18n="data_as_of">Data as of</strong> 2026-09-26</span>
+      <span class="m-item" data-i18n="source_note">Source: Megatama project files · latest version per type, older duplicates ignored</span>
+    </div>
+  </div>
 
   <div class="card">
     <h3 data-i18n="status_summary">Permit status summary</h3>
@@ -21,6 +27,7 @@
 
   <div class="card">
     <h3 data-i18n="permit_table">Permit Register</h3>
+    <div class="table-scroll">
     <table>
       <thead><tr>
         <th data-i18n="p_name">Permit / approval</th>
@@ -31,6 +38,7 @@
       </tr></thead>
       <tbody id="permitTable"></tbody>
     </table>
+    </div>
   </div>
 
   <div class="card">
