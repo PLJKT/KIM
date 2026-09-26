@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KIM Information System</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div id="top"></div>
+
+<div id="loginView" style="display:none;">
+  <div class="login-wrap">
+    <h2 data-i18n="login_title">Sign in</h2>
+    <div class="sub" data-i18n="tagline">Kawasan Industri Megatama · PT Megatama Putra Sejahtera</div>
+    <div class="field">
+      <label data-i18n="username">Username</label>
+      <input id="loginUser" type="text" autocomplete="username">
+    </div>
+    <div class="field">
+      <label data-i18n="password">Password</label>
+      <input id="loginPass" type="password" autocomplete="current-password">
+    </div>
+    <button class="btn-primary" id="loginBtn" data-i18n="sign_in">Sign in</button>
+    <div class="login-err" id="loginErr"></div>
+    <div class="login-hint" data-i18n="login_hint">Default credentials: admin / admin@123</div>
+  </div>
+</div>
+
+<div id="appView" style="display:none;">
+  <div id="nav"></div>
+  <div class="wrap">
+    <h1 class="page-title" data-i18n="overview_title">Kawasan Industri Megatama — Information System</h1>
+    <div class="page-sub" data-i18n="overview_sub">One source of truth across five dashboards, trilingual.</div>
+
+    <div class="grid grid-4" id="kpis"></div>
+
+    <div class="card">
+      <h3 data-i18n="dash_intro">Dashboards</h3>
+      <div class="dash-cards" id="dashCards"></div>
+    </div>
+
+    <div class="card">
+      <h3 data-i18n="overview">Overview</h3>
+      <div class="note" data-i18n="access_note">Access gate note</div>
+    </div>
+  </div>
+</div>
+
+<div id="bottom"></div>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+(function () {
+  function renderOverview() {
+    var k = document.getElementById('kpis');
+    var kpis = [
+      { label: t('kpi_licensed'), value: fmt(D.estate.licensedTotal.v), unit: t('ha') },
+      { label: t('kpi_mp'), value: fmt(D.estate.masterplanArea.v), unit: t('ha') },
+      { label: t('kpi_irr'), value: fmt(D.technical.fs.irr.v), unit: '%' },
+      { label: t('kpi_obtained'), value: fmt(D.legal.statusCounts.obtained), unit: '' },
+      { label: t('kpi_ongoing'), value: fmt(D.legal.statusCounts.ongoing), unit: '' },
+      { label: t('kpi_pending'), value: fmt(D.legal.statusCounts.pending), unit: '' },
+      { label: t('kpi_clients'), value: '3', unit: '' }
+    ];
+    var html = '';
+    for (var i = 0; i < kpis.length; i++) {
+      html += '<div class="kpi' + (i === 2 ? ' accent' : '') + '">' +
+        '<div class="k-label">' + kpis[i].label + '</div>' +
+        '<div class="k-value">' + kpis[i].value + '</div>' +
+        '<div class="k-unit">' + kpis[i].unit + '</div></div>';
+    }
+    k.innerHTML = html;
+
+    var cards = [
+      { href: 'dashboard-1-general.html', icon: '🏭', title: t('d1'), desc: t('d1_desc'), num: fmt(D.estate.licensedTotal.v), unit: t('ha') },
+      { href: 'dashboard-2-technical.html', icon: '📐', title: t('d2'), desc: t('d2_desc'), num: fmt(D.technical.fs.irr.v), unit: '%' },
+      { href: 'dashboard-3-legal.html', icon: '⚖️', title: t('d3'), desc: t('d3_desc'), num: fmt(D.legal.statusCounts.obtained), unit: '/' + fmt(D.legal.statusCounts.ongoing) + '/' + fmt(D.legal.statusCounts.pending) },
+      { href: 'dashboard-4-financial.html', icon: '💰', title: t('d4'), desc: t('d4_desc'), num: fmt(D.financial.fm.price.v), unit: 'IDR/m²' },
+      { href: 'dashboard-5-marketing.html', icon: '🤝', title: t('d5'), desc: t('d5_desc'), num: '3', unit: t('kpi_clients') }
+    ];
+    var c = '';
+    for (var j = 0; j < cards.length; j++) {
+      c += '<a class="dash-card" href="' + cards[j].href + '">' +
+        '<div class="d-icon">' + cards[j].icon + '</div>' +
+        '<h3>' + cards[j].title + '</h3>' +
+        '<p>' + cards[j].desc + '</p>' +
+        '<div class="d-num">' + cards[j].num + '</div>' +
+        '<div class="d-unit">' + cards[j].unit + '</div></a>';
+    }
+    document.getElementById('dashCards').innerHTML = c;
+  }
+
+  function enterApp() {
+    document.getElementById('loginView').style.display = 'none';
+    document.getElementById('appView').style.display = 'block';
+    KIM_header();
+    KIM_nav('');
+    renderOverview();
+    KIM_footer();
+  }
+
+  function showLogin() {
+    document.getElementById('loginView').style.display = 'block';
+    document.getElementById('appView').style.display = 'none';
+    document.getElementById('loginErr').textContent = '';
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var lv = document.getElementById('loginView');
+    var av = document.getElementById('appView');
+    if (lv && av) {
+      if (isAuthed()) enterApp(); else showLogin();
+    }
+    var btn = document.getElementById('loginBtn');
+    if (btn) {
+      btn.onclick = function () {
+        var u = document.getElementById('loginUser').value;
+        var p = document.getElementById('loginPass').value;
+        if (doLogin(u, p)) enterApp();
+        else document.getElementById('loginErr').textContent = t('login_error');
+      };
+    }
+    var enter = document.getElementById('loginPass');
+    if (enter) {
+      enter.onkeydown = function (e) { if (e.key === 'Enter') btn.onclick(); };
+    }
+  });
+})();
+</script>
+</body>
+</html>

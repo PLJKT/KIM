@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Legal & Permits — KIM</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div id="top"></div>
+<div id="nav"></div>
+<div class="wrap">
+  <h1 class="page-title" data-i18n="d3_title">Legal Status & Applied Regulation</h1>
+  <div class="page-sub" data-i18n="d3_sub">Government permits, compliance obligations and applicable regulations.</div>
+
+  <div class="card">
+    <h3 data-i18n="status_summary">Permit status summary</h3>
+    <div class="grid grid-4" id="statusKpis"></div>
+    <div class="chart-box" id="chartStatus"></div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="permit_table">Permit Register</h3>
+    <table>
+      <thead><tr>
+        <th data-i18n="p_name">Permit / approval</th>
+        <th data-i18n="p_number">Number</th>
+        <th data-i18n="p_issuer">Issuer</th>
+        <th data-i18n="p_date">Date / validity</th>
+        <th data-i18n="p_status">Status</th>
+      </tr></thead>
+      <tbody id="permitTable"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="amdal_title">AMDAL Follow-up Matrix (12 items)</h3>
+    <div class="note" data-i18n="amdal_source">Source: Matriks_Tindak_Lanjut_AMDAL_Megatama.xlsx (authoritative)</div>
+    <div style="overflow-x:auto">
+    <table>
+      <thead><tr>
+        <th data-i18n="a_no">No.</th>
+        <th data-i18n="a_issue">Main issue</th>
+        <th data-i18n="a_agency">Related agencies</th>
+        <th data-i18n="a_action">Action required</th>
+        <th data-i18n="a_pic">PIC</th>
+        <th data-i18n="a_deadline">Target</th>
+        <th data-i18n="a_status">Status</th>
+      </tr></thead>
+      <tbody id="amdalTable"></tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="reg_title">Applicable Regulations</h3>
+    <table>
+      <thead><tr>
+        <th data-i18n="reg_ref">Regulation</th>
+        <th data-i18n="reg_scope">Relevance</th>
+      </tr></thead>
+      <tbody id="regTable"></tbody>
+    </table>
+  </div>
+</div>
+<div id="bottom"></div>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>
+window.renderAll = function () {
+  disposeCharts();
+  var L3 = D.legal;
+
+  function row(html) { return '<tr>' + html + '</tr>'; }
+  function th(v) { return '<td>' + v + '</td>'; }
+  function tag(status) {
+    if (status === 'obtained') return '<span class="tag tag-ok">' + t('status_obtained') + '</span>';
+    if (status === 'ongoing') return '<span class="tag tag-warn">' + t('status_ongoing') + '</span>';
+    return '<span class="tag tag-info">' + t('status_pending') + '</span>';
+  }
+
+  var k = '';
+  var kpis = [
+    { label: t('status_obtained'), value: fmt(L3.statusCounts.obtained), cls: 'tag-ok' },
+    { label: t('status_ongoing'), value: fmt(L3.statusCounts.ongoing), cls: 'tag-warn' },
+    { label: t('status_pending'), value: fmt(L3.statusCounts.pending), cls: 'tag-info' }
+  ];
+  for (var i = 0; i < kpis.length; i++) {
+    k += '<div class="kpi"><div class="k-label">' + kpis[i].label + '</div><div class="k-value">' + kpis[i].value + '</div><div class="k-unit">' + t('unit') + '</div></div>';
+  }
+  document.getElementById('statusKpis').innerHTML = k;
+
+  renderChart('chartStatus', {
+    tooltip: { trigger: 'item', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true },
+    legend: { bottom: 0, itemWidth: 12, itemHeight: 10, textStyle: { fontSize: 11 } },
+    series: [{
+      type: 'pie',
+      radius: ['40%', '68%'],
+      center: ['50%', '46%'],
+      label: { fontSize: 11 },
+      data: [
+        { name: t('status_obtained'), value: L3.statusCounts.obtained },
+        { name: t('status_ongoing'), value: L3.statusCounts.ongoing },
+        { name: t('status_pending'), value: L3.statusCounts.pending }
+      ]
+    }],
+    title: { text: t('ch_status'), left: 'center', top: 4, textStyle: { fontSize: 13 } }
+  }, 250);
+
+  var p = '';
+  for (var j = 0; j < L3.permits.length; j++) {
+    var pm = L3.permits[j];
+    p += row(th(L(pm.name)) + th(pm.number) + th(pm.issuer) + th(pm.date) + th(tag(pm.status)));
+  }
+  document.getElementById('permitTable').innerHTML = p;
+
+  var a = '';
+  for (var m = 0; m < L3.amdal.length; m++) {
+    var am = L3.amdal[m];
+    a += row(
+      th(fmt(am.no)) +
+      th(L(am.issue)) +
+      th(am.agencies) +
+      th(L(am.action)) +
+      th(am.pic) +
+      th(L(am.deadline)) +
+      th(tag(am.status))
+    );
+  }
+  document.getElementById('amdalTable').innerHTML = a;
+
+  var r = '';
+  for (var n = 0; n < L3.regulations.length; n++) {
+    var rg = L3.regulations[n];
+    r += row(th(rg.ref) + th(L(rg.scope)));
+  }
+  document.getElementById('regTable').innerHTML = r;
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+  if (!KIM_init('d3')) return;
+  renderAll();
+  KIM_footer();
+});
+</script>
+</body>
+</html>

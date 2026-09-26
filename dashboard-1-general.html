@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>General & Master Plan — KIM</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div id="top"></div>
+<div id="nav"></div>
+<div class="wrap">
+  <h1 class="page-title" data-i18n="d1_title">General Information & Master Plan</h1>
+  <div class="page-sub" data-i18n="d1_sub">Estate profile, master plan versions and infrastructure specification.</div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <h3 data-i18n="estate_profile">Estate Profile</h3>
+      <table>
+        <tbody id="profileTable"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3 data-i18n="area_summary">Area Summary</h3>
+      <table>
+        <tbody id="areaTable"></tbody>
+      </table>
+      <div class="chart-box" id="chartLanduse"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="masterplan_versions">Master Plan Versions</h3>
+    <table>
+      <thead><tr>
+        <th data-i18n="version">Version</th>
+        <th data-i18n="designer">Designer</th>
+        <th data-i18n="area_ha">Area (ha)</th>
+        <th data-i18n="mp_status">Status</th>
+      </tr></thead>
+      <tbody id="mpTable"></tbody>
+    </table>
+    <div class="note" data-i18n="land_use_title">Master Plan Land Use (522.34 ha)</div>
+    <table>
+      <thead><tr>
+        <th data-i18n="value">Value</th>
+        <th class="num" data-i18n="share_pct">Share (%)</th>
+      </tr></thead>
+      <tbody id="landUseTable"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="infra_title">Infrastructure Specification</h3>
+    <table>
+      <thead><tr>
+        <th data-i18n="utility">Utility</th>
+        <th data-i18n="supplier">Supplier / partner</th>
+        <th class="num" data-i18n="current">Current</th>
+        <th class="num" data-i18n="target">Target</th>
+        <th data-i18n="unit">Unit</th>
+        <th data-i18n="note">Note</th>
+      </tr></thead>
+      <tbody id="infraTable"></tbody>
+    </table>
+    <div class="grid grid-2">
+      <div class="chart-box" id="chartElec"></div>
+      <div class="chart-box" id="chartWater"></div>
+    </div>
+  </div>
+</div>
+<div id="bottom"></div>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>
+window.renderAll = function () {
+  disposeCharts();
+  var e = D.estate;
+
+  function row(html) { return '<tr>' + html + '</tr>'; }
+  function th(v) { return '<td>' + v + '</td>'; }
+
+  var profile = '';
+  profile += row(th(t('company')) + th(e.company));
+  profile += row(th(t('group')) + th(e.group + ' · <span class="note" style="display:inline">' + t('gd_text') + '</span>'));
+  profile += row(th(t('founded')) + th(e.founded));
+  profile += row(th(t('deed')) + th(e.deed));
+  profile += row(th(t('holding')) + th(e.holding));
+  profile += row(th(t('location')) + th(e.location));
+  profile += row(th(t('interchange')) + th(e.interchange));
+  document.getElementById('profileTable').innerHTML = profile;
+
+  var area = '';
+  area += row(th(t('licensed_area')) + th('<b>' + fmt(e.licensedTotal.v) + '</b> ' + t('ha')));
+  area += row(th(t('industrial_area')) + th(fmt(e.industrial.v) + ' ' + t('ha')));
+  area += row(th(t('whs_res_com')) + th(fmt(e.whsResCom.v) + ' ' + t('ha')));
+  area += row(th(t('masterplan_area')) + th('<b>' + fmt(e.masterplanArea.v) + '</b> ' + t('ha') + ' (DED ' + t('mp_status') + ')'));
+  document.getElementById('areaTable').innerHTML = area;
+
+  var mp = '';
+  for (var i = 0; i < e.masterplans.length; i++) {
+    var m = e.masterplans[i];
+    mp += row(th(m.version) + th(m.designer) + th('<span class="num">' + fmt(m.area) + '</span>') + th(m.status === 'current' ? '<span class="tag tag-ok">' + t('status_obtained') + '</span>' : m.status));
+  }
+  document.getElementById('mpTable').innerHTML = mp;
+
+  var lu = '';
+  for (var j = 0; j < e.landUse.length; j++) {
+    var l = e.landUse[j];
+    var label = (j === 0) ? (t('lu_industrial') + ' — ' + t('lu_landbank')) : t(l.key);
+    lu += row(th(label) + th('<span class="num">' + fmt(l.share) + ' ' + t('pct') + '</span>'));
+  }
+  document.getElementById('landUseTable').innerHTML = lu;
+
+  var infra = '';
+  for (var k = 0; k < e.infra.length; k++) {
+    var f = e.infra[k];
+    infra += row(
+      th(t(f.key)) +
+      th(f.supplier) +
+      th('<span class="num">' + (f.current === null ? '—' : fmt(f.current)) + '</span>') +
+      th('<span class="num">' + (f.target === null ? '—' : fmt(f.target)) + '</span>') +
+      th(f.unit) +
+      th(t(f.noteKey))
+    );
+  }
+  document.getElementById('infraTable').innerHTML = infra;
+
+  // Charts
+  renderChart('chartLanduse', {
+    tooltip: { trigger: 'item', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true },
+    legend: { bottom: 0, itemWidth: 12, itemHeight: 10, textStyle: { fontSize: 11 } },
+    series: [{
+      type: 'pie',
+      radius: ['42%', '68%'],
+      center: ['50%', '46%'],
+      label: { fontSize: 11 },
+      data: [
+        { name: t('industrial_area'), value: e.industrial.v },
+        { name: t('whs_res_com'), value: e.whsResCom.v }
+      ]
+    }],
+    title: { text: t('ch_landuse') + ' (' + fmt(e.licensedTotal.v) + ' ' + t('ha') + ')', left: 'center', top: 4, textStyle: { fontSize: 13 } }
+  }, 250);
+
+  renderChart('chartElec', {
+    tooltip: { trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true },
+    legend: { top: 30, left: 'center', itemWidth: 12, itemHeight: 10, textStyle: { fontSize: 11 } },
+    grid: { left: 10, right: 20, top: 62, bottom: 10, containLabel: true },
+    xAxis: { type: 'category', data: [t('ut_elec')], axisLabel: { fontSize: 11 } },
+    yAxis: { type: 'value', name: 'MW', nameTextStyle: { fontSize: 11 }, axisLabel: { fontSize: 11 } },
+    series: [
+      { name: t('current'), type: 'bar', data: [60], label: { show: true, position: 'top', fontSize: 11 } },
+      { name: t('target'), type: 'bar', data: [360], label: { show: true, position: 'top', fontSize: 11 } }
+    ],
+    title: { text: t('ut_elec'), left: 'center', top: 4, textStyle: { fontSize: 13 } }
+  }, 250);
+
+  renderChart('chartWater', {
+    tooltip: { trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true },
+    legend: { top: 30, left: 'center', itemWidth: 12, itemHeight: 10, textStyle: { fontSize: 11 } },
+    grid: { left: 10, right: 20, top: 62, bottom: 10, containLabel: true },
+    xAxis: { type: 'category', data: [t('ut_water')], axisLabel: { fontSize: 11 } },
+    yAxis: { type: 'value', name: 'm³/day', nameTextStyle: { fontSize: 11 }, axisLabel: { fontSize: 11 } },
+    series: [
+      { name: t('current'), type: 'bar', data: [3000], label: { show: true, position: 'top', fontSize: 11 } },
+      { name: t('target'), type: 'bar', data: [16500], label: { show: true, position: 'top', fontSize: 11 } }
+    ],
+    title: { text: t('ut_water'), left: 'center', top: 4, textStyle: { fontSize: 13 } }
+  }, 250);
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+  if (!KIM_init('d1')) return;
+  renderAll();
+  KIM_footer();
+});
+</script>
+</body>
+</html>

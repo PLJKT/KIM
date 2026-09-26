@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financials — KIM</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div id="top"></div>
+<div id="nav"></div>
+<div class="wrap">
+  <h1 class="page-title" data-i18n="d4_title">Financials Highlights</h1>
+  <div class="page-sub" data-i18n="d4_sub">Estate-level financial indicators, cost estimates, pricing benchmarks and funding.</div>
+
+  <div class="grid grid-4" id="kpis"></div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <h3 data-i18n="fm_title">Financial Model — Deal Basis (2026)</h3>
+      <table>
+        <tbody id="fmTable"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3 data-i18n="price_title">Pricing Benchmarks</h3>
+      <table>
+        <tbody id="priceTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="funding_title">Interchange Funding (Apr–May 2026)</h3>
+    <table>
+      <tbody id="fundTable"></tbody>
+    </table>
+    <div class="chart-box" id="chartFunding"></div>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <h3 data-i18n="ch_cost">Investment & cost comparison (IDR)</h3>
+      <div class="chart-box" id="chartCost"></div>
+    </div>
+    <div class="card">
+      <h3 data-i18n="ch_price">Price per m² (IDR)</h3>
+      <div class="chart-box" id="chartPrice"></div>
+    </div>
+  </div>
+</div>
+<div id="bottom"></div>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>
+window.renderAll = function () {
+  disposeCharts();
+  var F = D.financial;
+
+  function row(html) { return '<tr>' + html + '</tr>'; }
+  function th(v) { return '<td>' + v + '</td>'; }
+
+  var k = '';
+  var kpis = [
+    { label: t('kpi_npv'), value: fmt(F.fs.npv.v), unit: 'IDR', extra: '@ ' + fmt(F.fs.npvRate.v) + ' %' },
+    { label: t('kpi_irr'), value: fmt(F.fs.irr.v), unit: '%', extra: '' },
+    { label: t('kpi_payback'), value: fmt(F.fs.payback.v), unit: t('years'), extra: '' },
+    { label: t('inv_incl_land'), value: fmt(F.fs.invInclLand.v), unit: 'IDR', extra: '' }
+  ];
+  for (var i = 0; i < kpis.length; i++) {
+    k += '<div class="kpi' + (i === 1 ? ' accent' : '') + '"><div class="k-label">' + kpis[i].label + '</div><div class="k-value">' + kpis[i].value + '</div><div class="k-unit">' + kpis[i].unit + (kpis[i].extra ? ' · ' + kpis[i].extra : '') + '</div></div>';
+  }
+  document.getElementById('kpis').innerHTML = k;
+
+  var fm = '';
+  fm += row(th(t('fm_price')) + th('<span class="num">' + fmt(F.fm.price.v) + '</span> ' + F.fm.price.u));
+  fm += row(th(t('fm_devcost')) + th('<span class="num">' + fmt(F.fm.devCostMin.v) + ' – ' + fmt(F.fm.devCostMax.v) + '</span> ' + F.fm.devCostMax.u));
+  fm += row(th(t('fm_land')) + th('<span class="num">' + fmt(F.fm.landMin.v) + ' – ' + fmt(F.fm.landMax.v) + '</span> ' + F.fm.landMax.u));
+  fm += row(th(t('fm_irr')) + th(F.fm.irrTarget));
+  fm += row(th(t('fm_period')) + th(F.fm.period));
+  document.getElementById('fmTable').innerHTML = fm;
+
+  var pr = '';
+  pr += row(th(t('internal_sim')) + th('<span class="num">' + F.pricing.internalSim.v + '</span> ' + F.pricing.internalSim.u + ' <span class="note" style="display:inline">(' + t(F.pricing.internalSim.noteKey) + ')</span>'));
+  pr += row(th(t('market_avg')) + th('<span class="num">' + fmt(F.pricing.marketAvg.v) + '</span> ' + F.pricing.marketAvg.u + ' <span class="note" style="display:inline">(' + t(F.pricing.marketAvg.noteKey) + ')</span>'));
+  pr += row(th(t('pn_forecast')) + th(t('pn_forecast')));
+  pr += row(th(t('fx')) + th(F.pricing.fx));
+  document.getElementById('priceTable').innerHTML = pr;
+
+  var fu = '';
+  fu += row(th(t('fund_need')) + th('<span class="num">' + fmt(F.funding.need.v) + '</span> ' + F.funding.need.u));
+  fu += row(th(t('fund_gap')) + th('<span class="num">' + fmt(F.funding.gap.v) + '</span> ' + F.funding.gap.u));
+  fu += row(th(t('fund_balance')) + th('<span class="num">' + fmt(F.funding.balance.v) + '</span> ' + F.funding.balance.u + ' · ' + t('data_as_of') + ' ' + F.funding.asOf));
+  document.getElementById('fundTable').innerHTML = fu;
+
+  renderChart('chartFunding', {
+    tooltip: { trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true },
+    legend: { top: 32, left: 'center', itemWidth: 12, itemHeight: 10, textStyle: { fontSize: 11 } },
+    grid: { left: 10, right: 20, top: 64, bottom: 10, containLabel: true },
+    xAxis: { type: 'category', data: [t('fund_need'), t('fund_gap'), t('fund_balance')], axisLabel: { fontSize: 11 } },
+    yAxis: { type: 'value', name: 'IDR', nameTextStyle: { fontSize: 11 }, axisLabel: { fontSize: 11, formatter: function (v) { return (v / 1000000000) + 'B'; } } },
+    series: [{
+      type: 'bar',
+      data: [
+        { value: F.funding.need.v, name: t('fund_need') },
+        { value: F.funding.gap.v, name: t('fund_gap') },
+        { value: F.funding.balance.v, name: t('fund_balance') }
+      ],
+      label: { show: true, position: 'top', fontSize: 10.5, formatter: function (p) { return (p.value / 1000000000).toFixed(1) + 'B'; } },
+      barWidth: 40
+    }],
+    title: { text: t('ch_funding'), left: 'center', top: 4, textStyle: { fontSize: 13 } }
+  }, 250);
+
+  renderChart('chartCost', {
+    tooltip: { trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true },
+    legend: { top: 32, left: 'center', itemWidth: 12, itemHeight: 10, textStyle: { fontSize: 11 } },
+    grid: { left: 10, right: 20, top: 64, bottom: 10, containLabel: true },
+    xAxis: { type: 'category', data: [t('inv_incl_land'), t('inv_excl_land'), t('cost_total')], axisLabel: { fontSize: 10.5 } },
+    yAxis: { type: 'value', name: 'IDR', nameTextStyle: { fontSize: 11 }, axisLabel: { fontSize: 11, formatter: function (v) { return (v / 1000000000) + 'B'; } } },
+    series: [{
+      type: 'bar',
+      data: [
+        { value: F.fs.invInclLand.v, name: t('inv_incl_land') },
+        { value: F.fs.invExclLand.v, name: t('inv_excl_land') },
+        { value: D.technical.costUltimate.total.v, name: t('cost_total') }
+      ],
+      label: { show: true, position: 'top', fontSize: 10.5, formatter: function (p) { return (p.value / 1000000000).toFixed(1) + 'B'; } },
+      barWidth: 40
+    }],
+    title: { text: t('ch_cost'), left: 'center', top: 4, textStyle: { fontSize: 13 } }
+  }, 250);
+
+  renderChart('chartPrice', {
+    tooltip: { trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true },
+    legend: { top: 32, left: 'center', itemWidth: 12, itemHeight: 10, textStyle: { fontSize: 11 } },
+    grid: { left: 10, right: 20, top: 64, bottom: 10, containLabel: true },
+    xAxis: { type: 'category', data: [t('fm_price'), t('fm_devcost') + ' (' + t('word_max') + ')', t('fm_land') + ' (' + t('word_max') + ')'], axisLabel: { fontSize: 10.5 } },
+    yAxis: { type: 'value', name: 'IDR/m²', nameTextStyle: { fontSize: 11 }, axisLabel: { fontSize: 11 } },
+    series: [{
+      type: 'bar',
+      data: [
+        { value: F.fm.price.v, name: t('fm_price') },
+        { value: F.fm.devCostMax.v, name: t('fm_devcost') },
+        { value: F.fm.landMax.v, name: t('fm_land') }
+      ],
+      label: { show: true, position: 'top', fontSize: 10.5 },
+      barWidth: 40
+    }],
+    title: { text: t('ch_price'), left: 'center', top: 4, textStyle: { fontSize: 13 } }
+  }, 250);
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+  if (!KIM_init('d4')) return;
+  renderAll();
+  KIM_footer();
+});
+</script>
+</body>
+</html>

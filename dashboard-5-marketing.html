@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketing & Collaboration — KIM</title>
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div id="top"></div>
+<div id="nav"></div>
+<div class="wrap">
+  <h1 class="page-title" data-i18n="d5_title">Marketing & Collaboration</h1>
+  <div class="page-sub" data-i18n="d5_sub">All third-party related updates and progress — clients, agreements, marketing, market intelligence and meetings.</div>
+
+  <div class="card">
+    <h3 data-i18n="pipeline_title">Client Engagement Pipeline (7 stages)</h3>
+    <div class="grid grid-2">
+      <div class="chart-box" id="chartPipeline"></div>
+      <div id="clientCards"></div>
+    </div>
+    <div class="note" id="stageLegend"></div>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <h3 data-i18n="req_title">Client Requirements & Deal Parameters</h3>
+      <table>
+        <thead><tr>
+          <th data-i18n="r_client">Client</th>
+          <th data-i18n="r_item">Item</th>
+          <th data-i18n="r_value">Requirement</th>
+        </tr></thead>
+        <tbody id="reqTable"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3 data-i18n="agmt_title">Third-Party Agreements Register</h3>
+      <table>
+        <thead><tr>
+          <th data-i18n="ag_name">Agreement</th>
+          <th data-i18n="ag_party">Counterparty</th>
+          <th data-i18n="ag_date">Date</th>
+          <th data-i18n="ag_status">Status</th>
+        </tr></thead>
+        <tbody id="agmtTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <h3 data-i18n="collateral_title">Marketing Collateral (latest version)</h3>
+      <table>
+        <thead><tr>
+          <th data-i18n="mc_name">Material</th>
+          <th data-i18n="mc_audience">Audience</th>
+          <th data-i18n="mc_date">Version</th>
+          <th data-i18n="mc_status">Status</th>
+        </tr></thead>
+        <tbody id="colTable"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3 data-i18n="intel_title">Market Intelligence</h3>
+      <table>
+        <thead><tr>
+          <th data-i18n="mi_name">Report / data</th>
+          <th data-i18n="mi_source">Source</th>
+          <th data-i18n="mi_date">Date</th>
+        </tr></thead>
+        <tbody id="intelTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="meet_title">Third-Party Meetings & Action Items</h3>
+    <table>
+      <thead><tr>
+        <th data-i18n="m_date">Date</th>
+        <th data-i18n="m_topic">Topic</th>
+      </tr></thead>
+      <tbody id="meetTable"></tbody>
+    </table>
+  </div>
+</div>
+<div id="bottom"></div>
+
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/auth.js"></script>
+<script src="assets/js/app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>
+window.renderAll = function () {
+  disposeCharts();
+  var M5 = D.marketing;
+
+  function row(html) { return '<tr>' + html + '</tr>'; }
+  function th(v) { return '<td>' + v + '</td>'; }
+  function agTag(status) {
+    if (status === 'executed') return '<span class="tag tag-ok">' + t('ag_executed') + '</span>';
+    if (status === 'established') return '<span class="tag tag-info">' + t('ag_established') + '</span>';
+    return '<span class="tag tag-ok">' + t('ag_signed') + '</span>';
+  }
+  function mcTag(status) {
+    if (status === 'sent') return '<span class="tag tag-info">' + t('mc_sent') + '</span>';
+    if (status === 'current') return '<span class="tag tag-ok">' + t('mc_current') + '</span>';
+    if (status === 'internal') return '<span class="tag tag-mute">' + t('mc_internal') + '</span>';
+    return '<span class="tag tag-mute">' + t('mc_available') + '</span>';
+  }
+
+  // Client cards
+  var cc = '';
+  for (var i = 0; i < M5.clients.length; i++) {
+    var c = M5.clients[i];
+    var hist = '';
+    var h = c.history[CURRENT_LANG] || c.history.en;
+    for (var j = 0; j < h.length; j++) {
+      hist += '<li>' + h[j] + '</li>';
+    }
+    cc += '<div class="card" style="margin:0 0 10px">' +
+      '<h3 style="justify-content:space-between"><span>' + c.name + '</span><span class="tag tag-warn">' + t('stage') + ' ' + fmt(c.stage) + ' / 7</span></h3>' +
+      '<ul style="margin:0 0 8px;padding-left:18px;font-size:12.5px">' + hist + '</ul>' +
+      '<div class="note"><b>' + t('status_pending') + ':</b> ' + L(c.pending) + '</div>' +
+    '</div>';
+  }
+  document.getElementById('clientCards').innerHTML = cc;
+
+  var legend = '';
+  for (var s = 0; s < M5.stages.length; s++) {
+    legend += '<span style="margin-right:10px;white-space:nowrap">' + t(M5.stages[s].key) + '</span>';
+  }
+  document.getElementById('stageLegend').innerHTML = legend;
+
+  renderChart('chartPipeline', {
+    tooltip: { trigger: 'item', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true },
+    grid: { left: 10, right: 56, top: 30, bottom: 10, containLabel: true },
+    xAxis: { type: 'value', name: t('stage') + ' / 7', min: 0, max: 7, nameTextStyle: { fontSize: 11 }, axisLabel: { fontSize: 11 } },
+    yAxis: { type: 'category', data: (function () { var a = []; for (var i = 0; i < M5.clients.length; i++) a.push(M5.clients[i].name); return a; })(), axisLabel: { fontSize: 11 } },
+    series: [{
+      type: 'bar',
+      data: (function () { var a = []; for (var i = 0; i < M5.clients.length; i++) a.push(M5.clients[i].stage); return a; })(),
+      label: { show: true, position: 'right', fontSize: 11, formatter: function (p) { return fmt(p.value) + ' / 7'; } },
+      barWidth: 22
+    }],
+    title: { text: t('ch_pipeline'), left: 'center', top: 4, textStyle: { fontSize: 13 } }
+  }, 250);
+
+  var rq = '';
+  for (var r = 0; r < M5.requirements.length; r++) {
+    var req = M5.requirements[r];
+    rq += row(th(req.client) + th(t(req.itemKey)) + th(req.value));
+  }
+  document.getElementById('reqTable').innerHTML = rq;
+
+  var ag = '';
+  for (var g = 0; g < M5.agreements.length; g++) {
+    var a = M5.agreements[g];
+    ag += row(th(a.name) + th(a.party) + th(a.date) + th(agTag(a.status)));
+  }
+  document.getElementById('agmtTable').innerHTML = ag;
+
+  var co = '';
+  for (var o = 0; o < M5.collateral.length; o++) {
+    var m = M5.collateral[o];
+    co += row(th(m.name) + th(m.audience) + th(m.date) + th(mcTag(m.status)));
+  }
+  document.getElementById('colTable').innerHTML = co;
+
+  var intelRows = '';
+  for (var n = 0; n < M5.intel.length; n++) {
+    var it = M5.intel[n];
+    intelRows += row(th(it.name) + th(it.source) + th(it.date));
+  }
+  document.getElementById('intelTable').innerHTML = intelRows;
+
+  var mt = '';
+  for (var e = 0; e < M5.meetings.length; e++) {
+    var me = M5.meetings[e];
+    mt += row(th(me.date) + th(t(me.topicKey)));
+  }
+  document.getElementById('meetTable').innerHTML = mt;
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+  if (!KIM_init('d5')) return;
+  renderAll();
+  KIM_footer();
+});
+</script>
+</body>
+</html>
