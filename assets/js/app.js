@@ -30,7 +30,8 @@ function KIM_nav(active) {
     { id: 'd2', label: t('d2'), href: 'dashboard-2-technical.html' },
     { id: 'd3', label: t('d3'), href: 'dashboard-3-legal.html' },
     { id: 'd4', label: t('d4'), href: 'dashboard-4-financial.html' },
-    { id: 'd5', label: t('d5'), href: 'dashboard-5-marketing.html' }
+    { id: 'd5', label: t('d5'), href: 'dashboard-5-marketing.html' },
+    { id: 'd6', label: t('d6'), href: 'dashboard-6-competitor.html' }
   ];
   var html = '';
   for (var i = 0; i < items.length; i++) {

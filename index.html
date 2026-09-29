@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KIM Information System</title>
-<link rel="stylesheet" href="assets/css/style.css?v=20260927">
+<link rel="stylesheet" href="assets/css/style.css?v=20260929">
 </head>
 <body>
 <div id="top"></div>
@@ -31,7 +31,7 @@
   <div class="wrap">
     <div class="page-head">
       <h1 class="page-title" data-i18n="overview_title">Kawasan Industri Megatama — Information System</h1>
-      <div class="page-sub" data-i18n="overview_sub">One source of truth across five dashboards, trilingual.</div>
+      <div class="page-sub" data-i18n="overview_sub">One source of truth across six dashboards, trilingual.</div>
       <div class="meta-bar" id="metaBar"></div>
     </div>
 
@@ -51,10 +51,10 @@
 
 <div id="bottom"></div>
 
-<script src="assets/js/i18n.js?v=20260927"></script>
-<script src="assets/js/data.js?v=20260927"></script>
-<script src="assets/js/auth.js?v=20260927"></script>
-<script src="assets/js/app.js?v=20260927"></script>
+<script src="assets/js/i18n.js?v=20260929"></script>
+<script src="assets/js/data.js?v=20260929"></script>
+<script src="assets/js/auth.js?v=20260929"></script>
+<script src="assets/js/app.js?v=20260929"></script>
 <script>
 (function () {
   function renderOverview() {
@@ -83,7 +83,8 @@
       { href: 'dashboard-2-technical.html', icon: '📐', title: t('d2'), desc: t('d2_desc'), num: fmt(D.technical.fs.irr.v), unit: '%' },
       { href: 'dashboard-3-legal.html', icon: '⚖️', title: t('d3'), desc: t('d3_desc'), num: fmt(D.legal.statusCounts.obtained), unit: '/' + fmt(D.legal.statusCounts.ongoing) + '/' + fmt(D.legal.statusCounts.pending) },
       { href: 'dashboard-4-financial.html', icon: '💰', title: t('d4'), desc: t('d4_desc'), num: fmt(D.financial.fm.price.v), unit: 'IDR/m²' },
-      { href: 'dashboard-5-marketing.html', icon: '🤝', title: t('d5'), desc: t('d5_desc'), num: '3', unit: t('kpi_clients') }
+      { href: 'dashboard-5-marketing.html', icon: '🤝', title: t('d5'), desc: t('d5_desc'), num: fmt(D.marketing.clients.length), unit: t('kpi_clients') },
+      { href: 'dashboard-6-competitor.html', icon: '📊', title: t('d6'), desc: t('d6_desc'), num: fmt(D.competitor.estates.length), unit: t('cmp_estates_unit') }
     ];
     var c = '';
     for (var j = 0; j < cards.length; j++) {

@@ -55,6 +55,15 @@ var D = {
       { key: 'ut_road', supplier: '—', current: null, target: null, unit: 'm', noteKey: 'n_road' },
       { key: 'ut_substation', supplier: 'PLN', current: null, target: null, unit: 'km', noteKey: 'n_sub' },
       { key: 'ut_interchange', supplier: 'Pemkab / PT.PP', current: null, target: null, unit: '—', noteKey: 'n_interchange' }
+    ],
+    logistics: [
+      { key: 'log_jakarta', dist: 80, distU: 'km', time: '1.5 h', noteKey: 'log_jakarta_note', routeKey: 'log_route_jakarta' },
+      { key: 'log_shia', dist: 115, distU: 'km', time: '2.25 h', noteKey: '', routeKey: 'log_route_shia' },
+      { key: 'log_halim', dist: 80, distU: 'km', time: '1.5 h', noteKey: '', routeKey: 'log_route_halim' },
+      { key: 'log_priok', dist: 90, distU: 'km', time: '2 h', noteKey: '', routeKey: 'log_route_priok' },
+      { key: 'log_patimban', dist: 60, distU: 'km', time: '1.5 h', noteKey: 'log_patimban_note', routeKey: 'log_route_patimban' },
+      { key: 'log_km72', dist: 7, distU: 'km', time: '15 min', noteKey: 'log_km72_note', routeKey: 'log_route_km72' },
+      { key: 'log_km778', dist: 3, distU: 'km', time: '<5 min', noteKey: 'log_km778_note', routeKey: 'log_route_km778' }
     ]
   },
 
@@ -293,6 +302,49 @@ var D = {
       { date: '2025-12-19', topicKey: 'm_liando_mod' },
       { date: '2026-05', topicKey: 'm_catl_visit' },
       { date: '2026-05-26', topicKey: 'm_catl_meet' }
+    ]
+  },
+  competitor: {
+    priceSeries: {
+      years: [2020, 2021, 2022, 2023, 2024, '2025E'],
+      regencies: [
+        { key: 'reg_bekasi', color: '#6b7280', width: 2, data: [196.0, 215.9, 201.1, 200.3, 196.0, 200.5] },
+        { key: 'reg_karawang', color: '#34558b', width: 2, data: [155.0, 159.0, 155.7, 161.4, 170.8, 186.1] },
+        { key: 'reg_purwakarta', color: '#0e6b5c', width: 3.5, data: [125.0, 125.0, 129.6, 134.0, 137.7, 140.9] },
+        { key: 'reg_subang', color: '#d97706', width: 2, data: [125.0, 127.5, 131.3, 135.3, 139.3, null] }
+      ]
+    },
+    insights: ['cmp_insight_1', 'cmp_insight_2', 'cmp_insight_3', 'cmp_insight_4'],
+    estates: [
+      { name: 'GIIC', dev: 'Greenland International Industrial Center', region: 'Bekasi', net: 1540, yop: 2008, takeUp: '—', asking: 'USD 229', tenants: '—' },
+      { name: 'Delta Silicon', dev: 'Delta Silicon', region: 'Bekasi', net: null, yop: null, takeUp: '—', asking: 'USD 155', tenants: '—' },
+      { name: 'MM2100', dev: 'MM2100', region: 'Bekasi', net: null, yop: null, takeUp: '—', asking: 'USD 198', tenants: '—' },
+      { name: 'Jababeka Industrial Estate', dev: 'Jababeka', region: 'Bekasi', net: null, yop: null, takeUp: '—', asking: 'USD 201', tenants: '—' },
+      { name: 'Bekasi Fajar Industrial Estate', dev: 'Bekasi Fajar', region: 'Bekasi', net: null, yop: null, takeUp: '—', asking: 'USD 198', tenants: '—' },
+      { name: 'Kota Bukit Indah (Indotaisei)', dev: 'Indotaisei Indah Development', region: 'Karawang', net: null, yop: null, takeUp: '100% (H1 2025)', asking: 'USD 155', tenants: '—', note: 'township; awaiting Phase 3' },
+      { name: 'Suryacipta City of Industry', dev: 'Suryacipta Swadaya', region: 'Karawang', net: 980, yop: 1997, takeUp: '97.6% (H1 2025)', asking: 'USD 150', tenants: 'Daihatsu · Isuzu · Bridgestone' },
+      { name: 'KIIC', dev: 'Sinar Mas Land & Itochu', region: 'Karawang', net: null, yop: null, takeUp: '97.6% (H1 2025)', asking: 'IDR 3,000,000', tenants: '—', note: 'toll exit KM 54' },
+      { name: 'Artha Industrial Hill', dev: 'Artha Industrial Hills', region: 'Karawang', net: null, yop: null, takeUp: '54.3% (H1 2025)', asking: 'USD 165', tenants: '—', note: 'largest unsold land in Karawang' },
+      { name: 'KNIC', dev: 'CFLD International', region: 'Karawang', net: null, yop: null, takeUp: '83.3% (early 2025)', asking: 'USD 175', tenants: '—', note: 'EV battery hub' },
+      { name: 'KIM (Mitrakarawang)', dev: 'Mitra Karawangjaya', region: 'Karawang', net: 350, yop: 1992, takeUp: '100% (since 2015)', asking: '—', tenants: 'Honda · Chemco · United Steel', note: 'different entity from KIM – Megatama' },
+      { name: 'Kota Bukit Indah (Besland Pertiwi)', dev: 'Besland Pertiwi', region: 'Purwakarta', net: 519.75, yop: 1991, takeUp: '100%', asking: '— (rental factories)', tenants: 'Nissan · Indofood · Indomobil' },
+      { name: 'Jatiluhur Industrial Smart City', dev: 'Multi Optima Sentosa', region: 'Purwakarta', net: 630, yop: 2023, takeUp: '5 companies', asking: 'USD 125', tenants: 'Wings Group (F&B)' },
+      { name: 'PIIP', dev: 'Asri Pelangi Nusa', region: 'Purwakarta', net: 245, yop: '2026F', takeUp: '16% (1 company)', asking: 'USD 107', tenants: 'Handal Indonesia Motor' },
+      { name: 'Subang Smartpolitan', dev: 'Suryacipta Swadaya', region: 'Subang', net: 1901.9, yop: '2026F', takeUp: '8% (6 companies)', asking: 'USD 125', tenants: 'BYD (anchor, EV)', note: 'Patimban proximity' }
+    ],
+    cluster: [
+      { name: 'Kota Bukit Indah (Besland Pertiwi)', sc: '0.08', water: '0.70', ww: '0.70', elec: '1,327', road: '45 / 20', wcap: '60,000', wwcap: '28,000', ecap: '250 MVA', gas: 'PGN' },
+      { name: 'Jatiluhur Industrial Smart City', sc: '0.07', water: '0.70', ww: '0.70', elec: '1,327', road: '50 / 40', wcap: '21,600', wwcap: '10,000', ecap: '420 MVA', gas: 'PGN' },
+      { name: 'PIIP', sc: '—', water: '—', ww: '—', elec: '—', road: '42 / 32', wcap: '19,000', wwcap: '10,000', ecap: '140 MVA', gas: 'PGN' },
+      { name: 'Subang Smartpolitan', sc: '0.08', water: '0.80', ww: '0.80', elec: '1,306', road: '60 / 45', wcap: '86,400', wwcap: '71,280', ecap: '480 MVA', gas: 'PGN' }
+    ],
+    kimBenchmark: { sc: '—', water: '1', ww: '—', elec: '996 – 1,114', road: '34.5 / 22', wcap: '16,500', wwcap: '13,500', ecap: '60 → 360 MW', gas: 'PGN' },
+    positioning: [
+      { name: 'GIIC', usd: 229 }, { name: 'KIIC', usd: 209 }, { name: 'Jababeka', usd: 201 },
+      { name: 'MM2100', usd: 198 }, { name: 'Bekasi Fajar', usd: 198 }, { name: 'KNIC', usd: 175 },
+      { name: 'Artha', usd: 165 }, { name: 'KBI (Indotaisei)', usd: 155 }, { name: 'Delta Silicon', usd: 155 },
+      { name: 'Suryacipta', usd: 150 }, { name: 'JISC', usd: 125 }, { name: 'Subang Smartpolitan', usd: 125 },
+      { name: 'PIIP', usd: 107 }, { name: 'KIM – Megatama', usd: 100, km: true }
     ]
   }
 };

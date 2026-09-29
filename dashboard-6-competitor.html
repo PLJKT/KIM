@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Competitor & Market Analysis — KIM</title>
+<link rel="stylesheet" href="assets/css/style.css?v=20260929">
+</head>
+<body>
+<div id="top"></div>
+<div id="nav"></div>
+<div class="wrap">
+  <div class="page-head">
+    <h1 class="page-title" data-i18n="d6_title">Competitor & Market Analysis</h1>
+    <div class="page-sub" data-i18n="d6_sub">Final research report basis — Colliers Purwakarta Industrial Market Research (2025-09); supplementary market intelligence from project files.</div>
+    <div class="meta-bar" id="metaBar"></div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="cmp_market_title">Corridor market context</h3>
+    <div class="chart-box" id="chartMarket"></div>
+    <div class="note" id="marketNote"></div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="cmp_table_title">Reviewed estates — 15 estates across Bekasi / Karawang / Purwakarta / Subang</h3>
+    <div class="note" data-i18n="cmp_note_kim">“KIM” in the Colliers study = Kawasan Industri Mitrakarawang (Karawang, 350 ha, fully occupied since 2015) — a different entity from KIM – Megatama (Purwakarta).</div>
+    <div class="table-scroll">
+    <table>
+      <thead><tr>
+        <th data-i18n="cmp_estate">Estate</th>
+        <th data-i18n="cmp_dev">Developer</th>
+        <th data-i18n="cmp_region">Regency</th>
+        <th class="num" data-i18n="cmp_area">Net area (ha)</th>
+        <th class="num" data-i18n="cmp_yop">YOP</th>
+        <th data-i18n="cmp_takeup">Take-up</th>
+        <th data-i18n="cmp_asking">Asking price (2024)</th>
+        <th data-i18n="cmp_tenants">Major tenants</th>
+      </tr></thead>
+      <tbody id="estatesTable"></tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="cmp_cluster_title">Purwakarta cluster — utilities & infrastructure benchmark</h3>
+    <div class="table-scroll">
+    <table>
+      <thead><tr>
+        <th data-i18n="cmp_estate">Estate</th>
+        <th data-i18n="cmp_sc">Service charge (USD/sqm/month)</th>
+        <th data-i18n="cmp_water_t">Water (USD/m³)</th>
+        <th data-i18n="cmp_ww_t">Wastewater (USD/m³)</th>
+        <th data-i18n="cmp_elec_t">Electricity (IDR/kWh)</th>
+        <th data-i18n="cmp_road_t">Road ROW main / secondary (m)</th>
+        <th data-i18n="cmp_watercap">Water capacity (m³/day)</th>
+        <th data-i18n="cmp_wwcap">Wastewater capacity (m³/day)</th>
+        <th data-i18n="cmp_eleccap">Electricity capacity</th>
+        <th data-i18n="cmp_gas">Gas</th>
+      </tr></thead>
+      <tbody id="clusterTable"></tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <h3 data-i18n="cmp_pos_title">Asking price positioning (USD/sqm, 2024)</h3>
+      <div class="chart-box" id="chartPos"></div>
+      <div class="note" data-i18n="cmp_pos_note">KIM benchmark ≈ USD 100 (FM basis 1,650,000 IDR/m² @ FX 16,500) — below Purwakarta average (USD 125 in 2024; 140.9 in 2025E).</div>
+    </div>
+    <div class="card">
+      <h3 data-i18n="cmp_adv_title">KIM positioning advantages</h3>
+      <div id="advList"></div>
+      <h4 class="subhead" data-i18n="cmp_sembcorp_title">Sembcorp Purwakarta — market intelligence (2026-09-16)</h4>
+      <div class="note" data-i18n="cmp_sembcorp_note">New-park marketing materials: industrial 355.6 ha + residential/commercial 168 ha; Phase 1 100.65 ha. Marketing material only — no transaction progress with KIM.</div>
+    </div>
+  </div>
+
+  <div class="note" data-i18n="cmp_src">Source: Colliers — Purwakarta Industrial Market Research, Final Draft Report (2025-09) · KIM project files</div>
+</div>
+<div id="bottom"></div>
+
+<script src="assets/js/i18n.js?v=20260929"></script>
+<script src="assets/js/data.js?v=20260929"></script>
+<script src="assets/js/auth.js?v=20260929"></script>
+<script src="assets/js/app.js?v=20260929"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+<script>
+window.renderAll = function () {
+  disposeCharts();
+  KIM_meta();
+  var C = D.competitor;
+
+  function row(html) { return '<tr>' + html + '</tr>'; }
+  function th(v) { return '<td>' + v + '</td>'; }
+  function f(v) { return (v === null || v === undefined || v === '') ? '—' : fmt(v); }
+
+  // Market context — average land price by regency
+  var ms = [];
+  for (var r = 0; r < C.priceSeries.regencies.length; r++) {
+    var rg = C.priceSeries.regencies[r];
+    ms.push({
+      name: t(rg.key), type: 'line', smooth: true, data: rg.data,
+      lineStyle: { width: rg.width },
+      itemStyle: { color: rg.color }, lineStyle2: null,
+      symbolSize: 6
+    });
+    ms[ms.length - 1].lineStyle.color = rg.color;
+  }
+  renderChart('chartMarket', {
+    tooltip: { trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true },
+    legend: { top: 30, left: 'center', itemWidth: 14, itemHeight: 10, textStyle: { fontSize: 11 } },
+    grid: { left: 10, right: 20, top: 64, bottom: 10, containLabel: true },
+    xAxis: { type: 'category', data: C.priceSeries.years, axisLabel: { fontSize: 11 } },
+    yAxis: { type: 'value', name: 'USD/sqm', nameTextStyle: { fontSize: 11 }, axisLabel: { fontSize: 11 } },
+    series: ms,
+    title: { text: t('cmp_price_note'), left: 'center', top: 4, textStyle: { fontSize: 13 } }
+  }, 270);
+
+  var insights = '';
+  for (var i = 0; i < C.insights.length; i++) {
+    insights += '<li>' + t(C.insights[i]) + '</li>';
+  }
+  document.getElementById('marketNote').innerHTML = '<ul class="insight-list">' + insights + '</ul>';
+
+  // Reviewed estates table
+  var et = '';
+  for (var e = 0; e < C.estates.length; e++) {
+    var st = C.estates[e];
+    et += row(th(st.name) + th(st.dev) + th(st.region) +
+      th('<span class="num">' + f(st.net) + '</span>') +
+      th('<span class="num">' + f(st.yop) + '</span>') +
+      th(st.takeUp) + th(st.asking) + th(st.tenants));
+  }
+  document.getElementById('estatesTable').innerHTML = et;
+
+  // Purwakarta cluster benchmark (KIM row first, highlighted)
+  var ct = '<tr class="km-row">' +
+    th('<b>' + t('cmp_km_col') + '</b>') +
+    th(C.kimBenchmark.sc) + th(C.kimBenchmark.water) + th(C.kimBenchmark.ww) +
+    th(C.kimBenchmark.elec) + th(C.kimBenchmark.road) +
+    th(C.kimBenchmark.wcap) + th(C.kimBenchmark.wwcap) +
+    th(C.kimBenchmark.ecap) + th(C.kimBenchmark.gas) +
+    '</tr>';
+  for (var c = 0; c < C.cluster.length; c++) {
+    var cl = C.cluster[c];
+    ct += row(th(cl.name) + th(cl.sc) + th(cl.water) + th(cl.ww) + th(cl.elec) +
+      th(cl.road) + th(cl.wcap) + th(cl.wwcap) + th(cl.ecap) + th(cl.gas));
+  }
+  document.getElementById('clusterTable').innerHTML = ct;
+
+  // Asking price positioning (KIM highlighted)
+  var names = [], vals = [], colors = [];
+  for (var p = 0; p < C.positioning.length; p++) {
+    var po = C.positioning[p];
+    names.push(po.name);
+    vals.push(po.usd);
+    colors.push(po.km ? '#0e6b5c' : '#c9d8d3');
+  }
+  renderChart('chartPos', {
+    tooltip: { trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true },
+    grid: { left: 10, right: 40, top: 34, bottom: 10, containLabel: true },
+    xAxis: { type: 'value', name: 'USD/sqm', nameTextStyle: { fontSize: 11 }, axisLabel: { fontSize: 11 } },
+    yAxis: { type: 'category', inverse: true, data: names, axisLabel: { fontSize: 10 } },
+    series: [{
+      type: 'bar', barWidth: 15,
+      data: (function () {
+        var a = [];
+        for (var q = 0; q < vals.length; q++) a.push({ value: vals[q], itemStyle: { color: colors[q] } });
+        return a;
+      })(),
+      label: { show: true, position: 'right', fontSize: 10, formatter: function (p) { return fmt(p.value); } }
+    }],
+    title: { text: t('cmp_pos_title'), left: 'center', top: 4, textStyle: { fontSize: 13 } }
+  }, 300);
+
+  var advs = ['cmp_adv_elec', 'cmp_adv_price', 'cmp_adv_toll', 'cmp_adv_patimban'];
+  var al = '';
+  for (var a = 0; a < advs.length; a++) { al += '<li>' + t(advs[a]) + '</li>'; }
+  document.getElementById('advList').innerHTML = '<ul class="adv-list">' + al + '</ul>';
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+  if (!KIM_init('d6')) return;
+  renderAll();
+  KIM_footer();
+});
+</script>
+</body>
+</html>

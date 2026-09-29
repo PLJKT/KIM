@@ -1,22 +1,23 @@
 # KIM Information System — Kawasan Industri Megatama
 
-Trilingual information system for **PT Megatama Putra Sejahtera** (Kawasan Industri Megatama), covering 5 dashboards: General & Master Plan, Technical Data, Legal & Permits, Financials, and Marketing & Collaboration.
+Trilingual information system for **PT Megatama Putra Sejahtera** (Kawasan Industri Megatama), covering 6 dashboards: General & Master Plan, Technical Data, Legal & Permits, Financials, Marketing & Collaboration, and Competitor Analysis.
 
-三语信息系统（英语默认 / 中文 / 印尼语），涵盖 5 大板块：总览与总规、技术数据、许可与合规、财务、营销与协作。
+三语信息系统（英语默认 / 中文 / 印尼语），涵盖 6 大板块：总览与总规、技术数据、许可与合规、财务、营销与协作、竞品分析。
 
-Sistem informasi trilingual (EN default / ZH / ID) dengan 5 dashboard: Umum & Master Plan, Data Teknis, Hukum & Perizinan, Keuangan, Pemasaran & Kolaborasi.
+Sistem informasi trilingual (EN default / ZH / ID) dengan 6 dashboard: Umum & Master Plan, Data Teknis, Hukum & Perizinan, Keuangan, Pemasaran & Kolaborasi, Analisis Kompetitor.
 
 ---
 
 ## Features / 功能 / Fitur
 
 - **Trilingual UI** — English (default), 中文, Bahasa Indonesia. Content strictly follows the selected language; proper nouns (company names, document titles, official acronyms) stay unchanged.
-- **5 independent dashboards**:
-  - `dashboard-1-general.html` — estate profile, master plan versions, land use, infrastructure specification
+- **6 independent dashboards**:
+  - `dashboard-1-general.html` — estate profile, master plan versions, land use, infrastructure specification, **location & logistics map** (Jakarta–Cikampek–Purwakarta–Subang–Patimban corridor, toll/rail/port/airport access)
   - `dashboard-2-technical.html` — FS highlights, development cost, HGB-ready parcels, document library
   - `dashboard-3-legal.html` — permit register by status, AMDAL follow-up matrix (12 items), applicable regulations
   - `dashboard-4-financial.html` — FS KPIs, financial model deal basis, pricing benchmarks, funding position
   - `dashboard-5-marketing.html` — client pipeline (Liando / CATL / Sembcorp), agreements, collateral, market intelligence, meetings
+  - `dashboard-6-competitor.html` — competitor & market analysis based on Colliers Purwakarta Industrial Market Research (2025-09): corridor land price trends, 15 reviewed estates, Purwakarta cluster utility benchmark, asking-price positioning vs KIM
 - **Client-side access gate** — default credentials: `admin` / `admin@123`. Change them in `assets/js/auth.js`.
   - ⚠️ NOTE: this is a convenience gate, **not a security boundary**. The repository is public; any visitor can read the source and bypass the login. Do not store truly confidential data in a public repo without real server-side authentication.
 - **Data rules**:
@@ -34,6 +35,7 @@ KIM/
 ├── dashboard-3-legal.html         # M3 Legal & Permits
 ├── dashboard-4-financial.html     # M4 Financials
 ├── dashboard-5-marketing.html     # M5 Marketing & Collaboration
+├── dashboard-6-competitor.html    # M6 Competitor Analysis
 └── assets/
     ├── css/style.css
     └── js/

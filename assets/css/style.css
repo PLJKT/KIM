@@ -320,3 +320,17 @@ footer {
   .chart-box { height: 260px; }
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
 }
+
+/* ---------- Location & logistics map ---------- */
+.map-wrap { }
+.loc-map { width: 100%; height: auto; display: block; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+.cell-sub { display: block; font-size: 11px; color: var(--mute); font-weight: 400; }
+.cond-list { margin: 8px 0 0; padding-left: 18px; }
+.cond-list li { margin-bottom: 8px; }
+/* ---------- Competitor page ---------- */
+.insight-list { margin: 8px 0 0; padding-left: 18px; }
+.insight-list li { margin-bottom: 8px; }
+.adv-list { margin: 8px 0 0; padding-left: 18px; }
+.adv-list li { margin-bottom: 10px; }
+.km-row td { background: var(--brand-soft); }
+.km-row td:first-child { font-weight: 700; color: var(--brand-dark); }
