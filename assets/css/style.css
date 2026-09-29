@@ -101,6 +101,7 @@ a:hover { text-decoration: underline; }
   color: var(--ink);
   background: transparent;
   border: 1px solid transparent;
+  white-space: nowrap;
   transition: all .15s;
 }
 .nav-item:hover { border-color: var(--line); background: var(--bg); text-decoration: none; }
@@ -155,6 +156,14 @@ a:hover { text-decoration: underline; }
 }
 .card h3 .chip.alt { background: var(--mute-soft); color: var(--mute); font-weight: 500; }
 .card h3 .chip.warn { background: var(--warn-soft); color: var(--warn); }
+.card .subhead {
+  margin: 16px 0 8px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--brand-dark);
+}
 
 /* ---------- Grid ---------- */
 .grid { display: grid; gap: 18px; }

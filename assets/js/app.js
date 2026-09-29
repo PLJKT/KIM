@@ -47,6 +47,14 @@ function KIM_footer() {
     '<footer>' + t('data_as_of') + ' ' + D.meta.asOf + ' · ' + t('source_note') + '</footer>';
 }
 
+function KIM_meta() {
+  var el = document.getElementById('metaBar');
+  if (!el) return;
+  el.innerHTML =
+    '<span class="m-item"><strong>' + t('data_as_of') + '</strong> ' + D.meta.asOf + '</span>' +
+    '<span class="m-item">' + t('source_note') + '</span>';
+}
+
 function syncLangBtns() {
   var btns = document.querySelectorAll('.lang-btn');
   for (var i = 0; i < btns.length; i++) {

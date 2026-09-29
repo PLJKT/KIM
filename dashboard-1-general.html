@@ -13,10 +13,7 @@
   <div class="page-head">
     <h1 class="page-title" data-i18n="d1_title">General Information & Master Plan</h1>
     <div class="page-sub" data-i18n="d1_sub">Estate profile, master plan versions and infrastructure specification.</div>
-    <div class="meta-bar">
-      <span class="m-item"><strong data-i18n="data_as_of">Data as of</strong> 2026-09-26</span>
-      <span class="m-item" data-i18n="source_note">Source: Megatama project files · latest version per type, older duplicates ignored</span>
-    </div>
+    <div class="meta-bar" id="metaBar"></div>
   </div>
 
   <div class="grid grid-2">
@@ -52,7 +49,7 @@
       <tbody id="mpTable"></tbody>
     </table>
     </div>
-    <div class="note" data-i18n="land_use_title">Master Plan Land Use — gross 5,099,024 m² (per FS)</div>
+    <h4 class="subhead" data-i18n="land_use_title">Master Plan Land Use — gross 5,099,024 m² (per FS)</h4>
     <div class="table-scroll">
     <table>
       <thead><tr>
@@ -79,9 +76,10 @@
       <tbody id="infraTable"></tbody>
     </table>
     </div>
-    <div class="grid grid-2">
+    <div class="grid grid-3">
       <div class="chart-box" id="chartElec"></div>
       <div class="chart-box" id="chartWater"></div>
+      <div class="chart-box" id="chartWw"></div>
     </div>
   </div>
 </div>
@@ -150,47 +148,46 @@ window.renderAll = function () {
   document.getElementById('infraTable').innerHTML = infra;
 
   // Charts
+  function findInfra(key) {
+    for (var i = 0; i < e.infra.length; i++) { if (e.infra[i].key === key) return e.infra[i]; }
+    return null;
+  }
+  function fmtLabel(v) {
+    return function (p) { return fmt(p.value); };
+  }
+  function capacityBar(id, item, unit) {
+    renderChart(id, {
+      tooltip: { trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true },
+      legend: { top: 30, left: 'center', itemWidth: 12, itemHeight: 10, textStyle: { fontSize: 11 } },
+      grid: { left: 10, right: 20, top: 62, bottom: 10, containLabel: true },
+      xAxis: { type: 'category', data: [t(item.key)], axisLabel: { fontSize: 11 } },
+      yAxis: { type: 'value', name: unit, nameTextStyle: { fontSize: 11 }, axisLabel: { fontSize: 11 } },
+      series: [
+        { name: t('current'), type: 'bar', barWidth: 26, data: [item.current], label: { show: true, position: 'top', fontSize: 11, formatter: fmtLabel() } },
+        { name: t('target'), type: 'bar', barWidth: 26, data: [item.target], label: { show: true, position: 'top', fontSize: 11, formatter: fmtLabel() } }
+      ],
+      title: { text: t(item.key), left: 'center', top: 4, textStyle: { fontSize: 13 } }
+    }, 250);
+  }
+
   renderChart('chartLanduse', {
-    tooltip: { trigger: 'item', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true },
-    legend: { bottom: 0, itemWidth: 12, itemHeight: 10, textStyle: { fontSize: 11 } },
+    tooltip: { trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true },
+    grid: { left: 10, right: 30, top: 34, bottom: 10, containLabel: true },
+    xAxis: { type: 'value', name: t('ha'), nameTextStyle: { fontSize: 11 }, axisLabel: { fontSize: 11 } },
+    yAxis: { type: 'category', data: [t('whs_res_com'), t('industrial_area')], axisLabel: { fontSize: 11 } },
     series: [{
-      type: 'pie',
-      radius: ['42%', '68%'],
-      center: ['50%', '46%'],
-      label: { fontSize: 11 },
-      data: [
-        { name: t('industrial_area'), value: e.industrial.v },
-        { name: t('whs_res_com'), value: e.whsResCom.v }
-      ]
+      type: 'bar', barWidth: 24,
+      label: { show: true, position: 'right', fontSize: 11, formatter: function (p) { return fmt(p.value) + ' ' + t('ha'); } },
+      data: [e.whsResCom.v, e.industrial.v]
     }],
     title: { text: t('ch_landuse') + ' (' + fmt(e.licensedTotal.v) + ' ' + t('ha') + ')', left: 'center', top: 4, textStyle: { fontSize: 13 } }
   }, 250);
 
-  renderChart('chartElec', {
-    tooltip: { trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true },
-    legend: { top: 30, left: 'center', itemWidth: 12, itemHeight: 10, textStyle: { fontSize: 11 } },
-    grid: { left: 10, right: 20, top: 62, bottom: 10, containLabel: true },
-    xAxis: { type: 'category', data: [t('ut_elec')], axisLabel: { fontSize: 11 } },
-    yAxis: { type: 'value', name: 'MW', nameTextStyle: { fontSize: 11 }, axisLabel: { fontSize: 11 } },
-    series: [
-      { name: t('current'), type: 'bar', data: [60], label: { show: true, position: 'top', fontSize: 11 } },
-      { name: t('target'), type: 'bar', data: [360], label: { show: true, position: 'top', fontSize: 11 } }
-    ],
-    title: { text: t('ut_elec'), left: 'center', top: 4, textStyle: { fontSize: 13 } }
-  }, 250);
+  capacityBar('chartElec', findInfra('ut_elec'), 'MW');
+  capacityBar('chartWater', findInfra('ut_water'), 'm³/day');
+  capacityBar('chartWw', findInfra('ut_ww'), 'm³/day');
 
-  renderChart('chartWater', {
-    tooltip: { trigger: 'axis', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true },
-    legend: { top: 30, left: 'center', itemWidth: 12, itemHeight: 10, textStyle: { fontSize: 11 } },
-    grid: { left: 10, right: 20, top: 62, bottom: 10, containLabel: true },
-    xAxis: { type: 'category', data: [t('ut_water')], axisLabel: { fontSize: 11 } },
-    yAxis: { type: 'value', name: 'm³/day', nameTextStyle: { fontSize: 11 }, axisLabel: { fontSize: 11 } },
-    series: [
-      { name: t('current'), type: 'bar', data: [3000], label: { show: true, position: 'top', fontSize: 11 } },
-      { name: t('target'), type: 'bar', data: [16500], label: { show: true, position: 'top', fontSize: 11 } }
-    ],
-    title: { text: t('ut_water'), left: 'center', top: 4, textStyle: { fontSize: 13 } }
-  }, 250);
+  KIM_meta();
 };
 
 document.addEventListener('DOMContentLoaded', function () {

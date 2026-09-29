@@ -31,7 +31,7 @@ var I18N = {
 
     // D1 General & Master Plan
     d1_title: 'General Information & Master Plan',
-    d1_sub: 'Estate profile, master plan versions and infrastructure specification (neutral, estate-level data)',
+    d1_sub: 'Estate profile, master plan versions and infrastructure specification.',
     estate_profile: 'Estate Profile',
     company: 'Company',
     group: 'Group',
@@ -272,7 +272,7 @@ var I18N = {
     no_data: '暂无数据',
 
     d1_title: '园区总览与总体规划',
-    d1_sub: '园区档案、总规版本与基础设施规格（中性、园区级数据，不含客户专有信息）',
+    d1_sub: '园区档案、总规版本与基础设施规格。',
     estate_profile: '园区档案',
     company: '公司',
     group: '集团',
@@ -508,7 +508,7 @@ var I18N = {
     no_data: 'Tidak ada data',
 
     d1_title: 'Informasi Umum & Master Plan',
-    d1_sub: 'Profil kawasan, versi master plan dan spesifikasi infrastruktur (data netral tingkat kawasan)',
+    d1_sub: 'Profil kawasan, versi master plan dan spesifikasi infrastruktur.',
     estate_profile: 'Profil Kawasan',
     company: 'Perusahaan',
     group: 'Grup',
