@@ -13,10 +13,7 @@
   <div class="page-head">
     <h1 class="page-title" data-i18n="d2_title">Technical Data</h1>
     <div class="page-sub" data-i18n="d2_sub">Feasibility study, design, cost estimates and technical documents.</div>
-    <div class="meta-bar">
-      <span class="m-item"><strong data-i18n="data_as_of">Data as of</strong> 2026-09-26</span>
-      <span class="m-item" data-i18n="source_note">Source: Megatama project files · latest version per type, older duplicates ignored</span>
-    </div>
+    <div class="meta-bar" id="metaBar"></div>
   </div>
 
   <div class="grid grid-2">
@@ -37,7 +34,7 @@
       </table>
       </div>
       <div class="note" data-i18n="cost_cats_note">Breakdown by 12 work categories — see source.</div>
-      <h3 data-i18n="rab_title" style="margin-top:16px">Interchange RAB (Simpang Susun Campaka KM 77+800)</h3>
+      <h3 class="subhead" data-i18n="rab_title">Interchange RAB (Simpang Susun Campaka KM 77+800)</h3>
       <div class="table-scroll">
       <table>
         <tbody id="rabTable"></tbody>
@@ -98,6 +95,7 @@
 <script>
 window.renderAll = function () {
   disposeCharts();
+  KIM_meta();
   var T = D.technical;
 
   function row(html) { return '<tr>' + html + '</tr>'; }

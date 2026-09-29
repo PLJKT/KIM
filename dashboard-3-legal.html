@@ -13,10 +13,7 @@
   <div class="page-head">
     <h1 class="page-title" data-i18n="d3_title">Legal Status & Applied Regulation</h1>
     <div class="page-sub" data-i18n="d3_sub">Government permits, compliance obligations and applicable regulations.</div>
-    <div class="meta-bar">
-      <span class="m-item"><strong data-i18n="data_as_of">Data as of</strong> 2026-09-26</span>
-      <span class="m-item" data-i18n="source_note">Source: Megatama project files · latest version per type, older duplicates ignored</span>
-    </div>
+    <div class="meta-bar" id="metaBar"></div>
   </div>
 
   <div class="card">
@@ -44,7 +41,7 @@
   <div class="card">
     <h3 data-i18n="amdal_title">AMDAL Follow-up Matrix (12 items)</h3>
     <div class="note" data-i18n="amdal_source">Source: Matriks_Tindak_Lanjut_AMDAL_Megatama.xlsx (authoritative)</div>
-    <div style="overflow-x:auto">
+    <div class="table-scroll">
     <table>
       <thead><tr>
         <th data-i18n="a_no">No.</th>
@@ -81,6 +78,7 @@
 <script>
 window.renderAll = function () {
   disposeCharts();
+  KIM_meta();
   var L3 = D.legal;
 
   function row(html) { return '<tr>' + html + '</tr>'; }

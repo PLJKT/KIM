@@ -13,10 +13,7 @@
   <div class="page-head">
     <h1 class="page-title" data-i18n="d4_title">Financials Highlights</h1>
     <div class="page-sub" data-i18n="d4_sub">Estate-level financial indicators, cost estimates, pricing benchmarks and funding.</div>
-    <div class="meta-bar">
-      <span class="m-item"><strong data-i18n="data_as_of">Data as of</strong> 2026-09-26</span>
-      <span class="m-item" data-i18n="source_note">Source: Megatama project files · latest version per type, older duplicates ignored</span>
-    </div>
+    <div class="meta-bar" id="metaBar"></div>
   </div>
 
   <div class="grid grid-4" id="kpis"></div>
@@ -71,6 +68,7 @@
 <script>
 window.renderAll = function () {
   disposeCharts();
+  KIM_meta();
   var F = D.financial;
 
   function row(html) { return '<tr>' + html + '</tr>'; }

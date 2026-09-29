@@ -13,10 +13,7 @@
   <div class="page-head">
     <h1 class="page-title" data-i18n="d5_title">Marketing & Collaboration</h1>
     <div class="page-sub" data-i18n="d5_sub">All third-party related updates and progress — clients, agreements, marketing, market intelligence and meetings.</div>
-    <div class="meta-bar">
-      <span class="m-item"><strong data-i18n="data_as_of">Data as of</strong> 2026-09-26</span>
-      <span class="m-item" data-i18n="source_note">Source: Megatama project files · latest version per type, older duplicates ignored</span>
-    </div>
+    <div class="meta-bar" id="metaBar"></div>
   </div>
 
   <div class="card">
@@ -111,6 +108,7 @@
 <script>
 window.renderAll = function () {
   disposeCharts();
+  KIM_meta();
   var M5 = D.marketing;
 
   function row(html) { return '<tr>' + html + '</tr>'; }
@@ -146,7 +144,7 @@ window.renderAll = function () {
 
   var legend = '';
   for (var s = 0; s < M5.stages.length; s++) {
-    legend += '<span style="margin-right:10px;white-space:nowrap">' + t(M5.stages[s].key) + '</span>';
+    legend += '<span class="stage-chip">' + t(M5.stages[s].key) + '</span>';
   }
   document.getElementById('stageLegend').innerHTML = legend;
 
@@ -154,7 +152,7 @@ window.renderAll = function () {
     tooltip: { trigger: 'item', triggerOn: 'mousemove|click', renderMode: 'richText', confine: true },
     grid: { left: 10, right: 56, top: 30, bottom: 10, containLabel: true },
     xAxis: { type: 'value', name: t('stage') + ' / 7', min: 0, max: 7, nameTextStyle: { fontSize: 11 }, axisLabel: { fontSize: 11 } },
-    yAxis: { type: 'category', data: (function () { var a = []; for (var i = 0; i < M5.clients.length; i++) a.push(M5.clients[i].name); return a; })(), axisLabel: { fontSize: 11 } },
+    yAxis: { type: 'category', inverse: true, data: (function () { var a = []; for (var i = 0; i < M5.clients.length; i++) a.push(M5.clients[i].name); return a; })(), axisLabel: { fontSize: 11 } },
     series: [{
       type: 'bar',
       data: (function () { var a = []; for (var i = 0; i < M5.clients.length; i++) a.push(M5.clients[i].stage); return a; })(),
