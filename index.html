@@ -32,10 +32,7 @@
     <div class="page-head">
       <h1 class="page-title" data-i18n="overview_title">Kawasan Industri Megatama — Information System</h1>
       <div class="page-sub" data-i18n="overview_sub">One source of truth across five dashboards, trilingual.</div>
-      <div class="meta-bar">
-        <span class="m-item"><strong data-i18n="data_as_of">Data as of</strong> 2026-09-26</span>
-        <span class="m-item" data-i18n="source_note">Source: Megatama project files · latest version per type, older duplicates ignored</span>
-      </div>
+      <div class="meta-bar" id="metaBar"></div>
     </div>
 
     <div class="grid grid-4" id="kpis"></div>
@@ -61,6 +58,7 @@
 <script>
 (function () {
   function renderOverview() {
+    KIM_meta();
     var k = document.getElementById('kpis');
     var kpis = [
       { label: t('kpi_licensed'), value: fmt(D.estate.licensedTotal.v), unit: t('ha') },
@@ -69,7 +67,7 @@
       { label: t('kpi_obtained'), value: fmt(D.legal.statusCounts.obtained), unit: '' },
       { label: t('kpi_ongoing'), value: fmt(D.legal.statusCounts.ongoing), unit: '' },
       { label: t('kpi_pending'), value: fmt(D.legal.statusCounts.pending), unit: '' },
-      { label: t('kpi_clients'), value: '3', unit: '' }
+      { label: t('kpi_clients'), value: fmt(D.marketing.clients.length), unit: '' }
     ];
     var html = '';
     for (var i = 0; i < kpis.length; i++) {
@@ -107,6 +105,8 @@
     renderOverview();
     KIM_footer();
   }
+
+  window.renderAll = renderOverview;
 
   function showLogin() {
     document.getElementById('loginView').style.display = 'block';
