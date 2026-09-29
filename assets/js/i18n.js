@@ -238,6 +238,9 @@ var I18N = {
     /* D1 location & logistics */
     map_title: 'Location & Logistics',
     map_schematic: 'Schematic map — indicative, not to scale',
+    map_real_cap: 'KIM estate & access map — satellite view with compass, scale, toll interchanges (SS Cikopo KM 72+800, planned Campaka KM 77+800) and railway stations',
+    map_real_src: 'Source: project requirement document — location map with compass (original labels retained)',
+    map_corr_title: 'Corridor context (schematic)',
     map_legend_toll: 'Toll road (existing)',
     map_legend_pantura: 'Pantura national road',
     map_legend_rail: 'Railway (disused line crossing the estate)',
@@ -535,6 +538,9 @@ var I18N = {
     /* D1 区位与物流 */
     map_title: '区位与物流',
     map_schematic: '示意图——仅为示意，未按比例',
+    map_real_cap: '园区与通道卫星图——含指北针、比例尺、收费站（现 SS Cikopo KM 72+800、规划 Campaka KM 77+800）及火车站',
+    map_real_src: '来源：项目需求文档——带指北针的区位图（保留原图标注）',
+    map_corr_title: '走廊背景（示意）',
     map_legend_toll: '高速公路（现有）',
     map_legend_pantura: 'Pantura 国道',
     map_legend_rail: '铁路（穿越园区的废弃线路）',
@@ -832,6 +838,9 @@ var I18N = {
     /* D1 lokasi & logistik */
     map_title: 'Lokasi & Logistik',
     map_schematic: 'Peta skematis — indikatif, tidak sesuai skala',
+    map_real_cap: 'Peta kawasan & akses — citra satelit dengan kompas, skala, gerbang tol (SS Cikopo KM 72+800, rencana Campaka KM 77+800) dan stasiun kereta',
+    map_real_src: 'Sumber: dokumen persyaratan proyek — peta lokasi dengan kompas (label asli dipertahankan)',
+    map_corr_title: 'Konteks koridor (skematis)',
     map_legend_toll: 'Jalan tol (eksisting)',
     map_legend_pantura: 'Jalan nasional Pantura',
     map_legend_rail: 'Rel kereta (jalur nonaktif melintasi kawasan)',

@@ -12,7 +12,7 @@ Sistem informasi trilingual (EN default / ZH / ID) dengan 6 dashboard: Umum & Ma
 
 - **Trilingual UI** — English (default), 中文, Bahasa Indonesia. Content strictly follows the selected language; proper nouns (company names, document titles, official acronyms) stay unchanged.
 - **6 independent dashboards**:
-  - `dashboard-1-general.html` — estate profile, master plan versions, land use, infrastructure specification, **location & logistics map** (Jakarta–Cikampek–Purwakarta–Subang–Patimban corridor, toll/rail/port/airport access)
+  - `dashboard-1-general.html` — estate profile, master plan versions, land use, infrastructure specification, **location & logistics card**: real satellite access map (from requirement documents, compass + scale + toll interchanges + railway stations) plus corridor schematic and logistics table
   - `dashboard-2-technical.html` — FS highlights, development cost, HGB-ready parcels, document library
   - `dashboard-3-legal.html` — permit register by status, AMDAL follow-up matrix (12 items), applicable regulations
   - `dashboard-4-financial.html` — FS KPIs, financial model deal basis, pricing benchmarks, funding position
